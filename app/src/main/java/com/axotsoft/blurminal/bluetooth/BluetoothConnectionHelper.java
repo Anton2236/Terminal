@@ -25,7 +25,7 @@ public class BluetoothConnectionHelper
     private Context context;
     private BluetoothAdapter adapter;
     private Messenger bluetoothMessenger;
-    private STRING_ENDING_TYPE stringEndingType;
+    private LINE_ENDING_TYPE stringEndingType;
     private SharedPreferences preferences;
 
     private ServiceConnection serviceConnection = new ServiceConnection()
@@ -62,8 +62,8 @@ public class BluetoothConnectionHelper
 
     private void initStringEnding(SharedPreferences sharedPreferences, String key)
     {
-        int typeId = sharedPreferences.getInt(key, STRING_ENDING_TYPE.CRLF.getKey());
-        stringEndingType = STRING_ENDING_TYPE.valueOf(typeId);
+        int typeId = sharedPreferences.getInt(key, LINE_ENDING_TYPE.CRLF.getKey());
+        stringEndingType = LINE_ENDING_TYPE.valueOf(typeId);
     }
 
 

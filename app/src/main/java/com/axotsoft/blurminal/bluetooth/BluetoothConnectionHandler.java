@@ -11,7 +11,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -53,7 +52,7 @@ public class BluetoothConnectionHandler extends Handler
         }
     }
 
-    public static Message getSendMessage(String message, STRING_ENDING_TYPE endingType)
+    public static Message getSendMessage(String message, LINE_ENDING_TYPE endingType)
     {
         Message msg = Message.obtain();
         msg.arg1 = BluetoothConnectionHandler.COMMAND_SEND;
@@ -76,7 +75,7 @@ public class BluetoothConnectionHandler extends Handler
         {
             if (msg.arg1 == COMMAND_SEND)
             {
-                STRING_ENDING_TYPE ending_type = STRING_ENDING_TYPE.valueOf(msg.arg2);
+                LINE_ENDING_TYPE ending_type = LINE_ENDING_TYPE.valueOf(msg.arg2);
                 String message = (String) msg.obj;
 
                 out.write((message == null ? "" : message + ending_type.getEnding()).getBytes());

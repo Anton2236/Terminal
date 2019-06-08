@@ -5,6 +5,8 @@ import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.net.IDN;
+
 public final class BluetoothDeviceContract
 {
 
@@ -26,7 +28,16 @@ public final class BluetoothDeviceContract
 
         public static final String _MAC_ADDRESS = "mac_address";
 
-        private static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String _LINE_ENDING = "line_ending";
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static String[] projection = new String[]
+                {
+                        _ID,
+                        _MAC_ADDRESS,
+                        _LINE_ENDING,
+                        _COMMANDS
+                };
 
 
         public static Uri buildUri(long id)
@@ -45,8 +56,17 @@ public final class BluetoothDeviceContract
         public static final String _MESSAGE = "message";
         public static final String _FROM_DEVICE = "from_device";
 
-        private static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String _DEVICE_ID = "device_id";
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 
+        public static String[] projection = new String[]
+                {
+                        _ID,
+                        _DEVICE_ID,
+                        _TIME_MILLIS,
+                        _MESSAGE,
+                        _FROM_DEVICE
+                };
 
         public static Uri buildUri(long id)
         {

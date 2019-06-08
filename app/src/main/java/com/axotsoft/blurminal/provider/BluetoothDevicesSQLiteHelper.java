@@ -19,7 +19,8 @@ public class BluetoothDevicesSQLiteHelper extends SQLiteOpenHelper
             "CREATE TABLE "
                     + BluetoothDeviceContract.DeviceEntry.TABLE_NAME + " ("
                     + BluetoothDeviceContract.DeviceEntry._ID + " INTEGER PRIMARY KEY, "
-                    + BluetoothDeviceContract.DeviceEntry._MAC_ADDRESS + " TEXT , "
+                    + BluetoothDeviceContract.DeviceEntry._MAC_ADDRESS + " TEXT, "
+                    + BluetoothDeviceContract.DeviceEntry._LINE_ENDING + " INTEGER , "
                     + BluetoothDeviceContract.DeviceEntry._COMMANDS + "BLOB "
                     + " );";
 
@@ -27,7 +28,8 @@ public class BluetoothDevicesSQLiteHelper extends SQLiteOpenHelper
             "CREATE TABLE "
                     + BluetoothDeviceContract.MessageEntry.TABLE_NAME + " ("
                     + BluetoothDeviceContract.MessageEntry._ID + " INTEGER PRIMARY KEY, "
-                    + BluetoothDeviceContract.MessageEntry._TIME_MILLIS + " INTEGER PRIMARY KEY, "
+                    + BluetoothDeviceContract.MessageEntry._DEVICE_ID + " INTEGER, "
+                    + BluetoothDeviceContract.MessageEntry._TIME_MILLIS + " INTEGER, "
                     + BluetoothDeviceContract.MessageEntry._MESSAGE + "TEXT, "
                     + BluetoothDeviceContract.MessageEntry._FROM_DEVICE + "INTEGER "
                     + " );";
