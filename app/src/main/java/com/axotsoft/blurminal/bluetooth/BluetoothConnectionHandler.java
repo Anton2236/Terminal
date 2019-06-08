@@ -3,6 +3,10 @@ package com.axotsoft.blurminal.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -34,21 +38,78 @@ public class BluetoothConnectionHandler extends Handler
     private Messenger callBack;
     private InputThread inputThread;
 
-    public BluetoothConnectionHandler(String address, Messenger callBack) throws IOException
+    private static final UUID BT_MODULE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    BluetoothConnectionHandler(Context context, String address, Messenger callBack)
     {
+        this.callBack = callBack;
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         if (device != null)
         {
-            this.socket = device.createInsecureRfcommSocketToServiceRecord(UUID.randomUUID());
-            this.callBack = callBack;
+            if (device.getBondState() == BluetoothDevice.BOND_BONDED)
+            {
+                connect(device);
+            }
+            else
+            {
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+                BroadcastReceiver bondedReceiver = getBondedReceiver(address);
+                context.registerReceiver(bondedReceiver, intentFilter);
+                device.createBond();
+            }
+        }
+        else
+        {
+            disconnect();
+        }
+    }
+
+    private BroadcastReceiver getBondedReceiver(final String address)
+    {
+        return new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.BOND_NONE);
+                if (device.getAddress().equals(address))
+                {
+                    if (bondState == BluetoothDevice.BOND_BONDED)
+                    {
+                        context.unregisterReceiver(this);
+                        connect(device);
+                    }
+                    else if (bondState != BluetoothDevice.BOND_NONE)
+                    {
+                        context.unregisterReceiver(this);
+                        disconnect();
+                    }
+                }
+            }
+        };
+    }
+
+
+    private void connect(BluetoothDevice device)
+    {
+        try
+        {
+            this.socket = device.createRfcommSocketToServiceRecord(BT_MODULE_UUID);
             socket.connect();
             if (socket.isConnected())
             {
                 this.out = socket.getOutputStream();
                 this.inputThread = new InputThread(socket.getInputStream());
                 this.inputThread.start();
-                SendConnected();
+                sendConnected();
             }
+        } catch (Exception e)
+        {
+            sendError(e);
+            sendDisconnect();
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -88,19 +149,40 @@ public class BluetoothConnectionHandler extends Handler
         } catch (Exception e)
         {
             Log.e(TAG, e.getMessage(), e);
-            SendError(e);
+            sendError(e);
         }
     }
 
-    private void disconnect() throws Exception
+    private void disconnect()
     {
-        out.close();
-        inputThread.setStop();
-        socket.close();
-        SendDisconnect();
+        try
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+        } catch (IOException e)
+        {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        if (inputThread != null)
+        {
+            inputThread.setStop();
+        }
+        try
+        {
+            if (socket != null)
+            {
+                socket.close();
+            }
+        } catch (IOException e)
+        {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        sendDisconnect();
     }
 
-    private void SendDisconnect()
+    private void sendDisconnect()
     {
         Message message = Message.obtain();
         message.arg1 = STATUS_DISCONNECTED;
@@ -113,7 +195,7 @@ public class BluetoothConnectionHandler extends Handler
         }
     }
 
-    private void SendConnected()
+    private void sendConnected()
     {
         Message message = Message.obtain();
         message.arg1 = STATUS_CONNECTED;
@@ -126,7 +208,7 @@ public class BluetoothConnectionHandler extends Handler
         }
     }
 
-    private void SendError(Exception e)
+    private void sendError(Exception e)
     {
         Message message = Message.obtain();
         message.obj = e;
@@ -140,7 +222,7 @@ public class BluetoothConnectionHandler extends Handler
         }
     }
 
-    private void SendMessage(String msg)
+    private void sendMessage(String msg)
     {
         Message message = Message.obtain();
         message.obj = msg;
@@ -159,6 +241,7 @@ public class BluetoothConnectionHandler extends Handler
 
         private InputStream inputStream;
         private boolean stop;
+        private final Object sync = new Object();
 
         private InputThread(InputStream inputStream)
         {
@@ -166,9 +249,13 @@ public class BluetoothConnectionHandler extends Handler
             stop = false;
         }
 
-        public void setStop()
+
+        void setStop()
         {
-            this.stop = true;
+            synchronized (sync)
+            {
+                this.stop = true;
+            }
         }
 
         @Override
@@ -182,24 +269,19 @@ public class BluetoothConnectionHandler extends Handler
                     bytes = new byte[inputStream.available()];
                     if (inputStream.read(bytes) > 0)
                     {
-                        SendMessage(new String(bytes));
+                        sendMessage(new String(bytes));
                     }
-                    if (stop)
+                    synchronized (sync)
                     {
-                        inputStream.close();
-                        break;
+                        if (stop)
+                        {
+                            inputStream.close();
+                            break;
+                        }
                     }
                 } catch (Exception e)
                 {
                     Log.e(TAG, e.getMessage(), e);
-                    SendError(e);
-                    try
-                    {
-                        disconnect();
-                    } catch (Exception e1)
-                    {
-                        Log.e(TAG, e1.getMessage(), e1);
-                    }
                     try
                     {
                         inputStream.close();
@@ -207,6 +289,9 @@ public class BluetoothConnectionHandler extends Handler
                     {
                         Log.e(TAG, e1.getMessage(), e1);
                     }
+                    sendError(e);
+                    disconnect();
+
                     break;
                 }
             }

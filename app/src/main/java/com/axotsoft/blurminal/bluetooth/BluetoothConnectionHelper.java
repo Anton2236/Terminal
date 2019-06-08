@@ -69,6 +69,7 @@ public class BluetoothConnectionHelper
 
     public void connect(String deviceAddress, Handler callbackHandler)
     {
+        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
         checkAdapterEnabled();
         Intent intent = BluetoothConnectionService.makeIntent(context, deviceAddress, callbackHandler);
         context.bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);

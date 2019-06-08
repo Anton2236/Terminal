@@ -29,7 +29,7 @@ public class BluetoothDevicesDao
         return getDeviceByUri(uri);
     }
 
-    private BluetoothDeviceRecord getDeviceByUri(Uri uri)
+    public BluetoothDeviceRecord getDeviceByUri(Uri uri)
     {
         Cursor cursor = contentResolver.query(uri, BluetoothDeviceContract.DeviceEntry.projection, null, null, null);
 
@@ -71,7 +71,7 @@ public class BluetoothDevicesDao
         return deviceRecords;
     }
 
-    public List<BluetoothMessageRecord> getAllMessgesForDevice(long deviceId)
+    public List<BluetoothMessageRecord> getAllMessagesForDevice(long deviceId)
     {
         Uri uri = BluetoothDeviceContract.MessageEntry.CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, BluetoothDeviceContract.MessageEntry.projection, BluetoothDeviceContract.MessageEntry._DEVICE_ID, new String[]{String.valueOf(deviceId)}, null);

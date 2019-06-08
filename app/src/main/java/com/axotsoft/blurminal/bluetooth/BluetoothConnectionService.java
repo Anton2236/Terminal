@@ -7,9 +7,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
-import android.util.Log;
-
-import java.io.IOException;
 
 public class BluetoothConnectionService extends Service
 {
@@ -18,16 +15,8 @@ public class BluetoothConnectionService extends Service
     @Override
     public IBinder onBind(Intent intent)
     {
-        IBinder binder = null;
-        try
-        {
-            BluetoothConnectionHandler handler = new BluetoothConnectionHandler(intent.getDataString(), (Messenger) intent.getParcelableExtra(EXTRA_MESSENGER));
-            binder = new Messenger(handler).getBinder();
-        } catch (IOException e)
-        {
-            Log.e(getClass().getName(), e.getMessage(), e);
-        }
-        return binder;
+        BluetoothConnectionHandler handler = new BluetoothConnectionHandler(getApplicationContext(), intent.getDataString(), intent.getParcelableExtra(EXTRA_MESSENGER));
+        return new Messenger(handler).getBinder();
     }
 
     public static Intent makeIntent(Context context, String deviceAddress, Handler callBackHandler)

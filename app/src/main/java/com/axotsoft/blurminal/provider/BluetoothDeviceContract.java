@@ -1,11 +1,9 @@
 package com.axotsoft.blurminal.provider;
 
 import android.content.ContentUris;
-import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.net.IDN;
 
 public final class BluetoothDeviceContract
 {

@@ -4,7 +4,7 @@ import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
 
 import java.util.List;
 
-class BluetoothDeviceRecord
+public class BluetoothDeviceRecord
 {
     private long id;
     private String macAddress;
@@ -37,5 +37,16 @@ class BluetoothDeviceRecord
     public List<String> getCommands()
     {
         return commands;
+    }
+
+
+    public void setLineEnding(LINE_ENDING_TYPE lineEnding)
+    {
+        this.lineEnding = lineEnding;
+    }
+
+    public void setCommands(List<String> commands)
+    {
+        this.commands = commands;
     }
 }
