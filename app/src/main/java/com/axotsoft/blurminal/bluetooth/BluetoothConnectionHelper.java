@@ -101,6 +101,11 @@ public class BluetoothConnectionHelper
         }
     }
 
+    void unbind()
+    {
+        context.unbindService(serviceConnection);
+    }
+
     public Set<BluetoothDevice> getBondedDevices()
     {
         checkAdapterEnabled();

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class BluetoothConnectionService extends Service
 {
-    private final static String MESSENGER_NAME = "MESSENGER";
+    private final static String EXTRA_MESSENGER = "MESSENGER";
 
     @Override
     public IBinder onBind(Intent intent)
@@ -21,7 +21,7 @@ public class BluetoothConnectionService extends Service
         IBinder binder = null;
         try
         {
-            BluetoothConnectionHandler handler = new BluetoothConnectionHandler(intent.getDataString(), (Messenger) intent.getParcelableExtra(MESSENGER_NAME));
+            BluetoothConnectionHandler handler = new BluetoothConnectionHandler(intent.getDataString(), (Messenger) intent.getParcelableExtra(EXTRA_MESSENGER));
             binder = new Messenger(handler).getBinder();
         } catch (IOException e)
         {
@@ -32,11 +32,6 @@ public class BluetoothConnectionService extends Service
 
     public static Intent makeIntent(Context context, String deviceAddress, Handler callBackHandler)
     {
-        return new Intent(context, BluetoothConnectionService.class).setData(Uri.parse(deviceAddress)).putExtra(MESSENGER_NAME, new Messenger(callBackHandler));
-    }
-
-    public static Intent makeUnbindIntent(Context context)
-    {
-        return new Intent(context, BluetoothConnectionService.class);
+        return new Intent(context, BluetoothConnectionService.class).setData(Uri.parse(deviceAddress)).putExtra(EXTRA_MESSENGER, new Messenger(callBackHandler));
     }
 }
