@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -25,8 +24,6 @@ public class BluetoothConnectionHelper
     private Context context;
     private BluetoothAdapter adapter;
     private Messenger bluetoothMessenger;
-    private LINE_ENDING_TYPE stringEndingType;
-    private SharedPreferences preferences;
 
     private ServiceConnection serviceConnection = new ServiceConnection()
     {
@@ -47,25 +44,7 @@ public class BluetoothConnectionHelper
     {
         this.context = context;
         this.adapter = BluetoothAdapter.getDefaultAdapter();
-        preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        preferences.registerOnSharedPreferenceChangeListener(this::OnPreferencesChanged);
-        initStringEnding(preferences, STRING_ENDING_TYPE_PREFERENCE);
     }
-
-    private void OnPreferencesChanged(SharedPreferences sharedPreferences, String key)
-    {
-        if (key.equals(STRING_ENDING_TYPE_PREFERENCE))
-        {
-            initStringEnding(sharedPreferences, key);
-        }
-    }
-
-    private void initStringEnding(SharedPreferences sharedPreferences, String key)
-    {
-        int typeId = sharedPreferences.getInt(key, LINE_ENDING_TYPE.CRLF.getKey());
-        stringEndingType = LINE_ENDING_TYPE.valueOf(typeId);
-    }
-
 
     public void connect(String deviceAddress, Handler callbackHandler)
     {
@@ -75,11 +54,11 @@ public class BluetoothConnectionHelper
         context.bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
     }
 
-    public void sendMessage(String message)
+    public void sendMessage(String message, LINE_ENDING_TYPE endingType)
     {
         if (bluetoothMessenger != null)
         {
-            send(BluetoothConnectionHandler.getSendMessage(message, stringEndingType));
+            send(BluetoothConnectionHandler.getSendMessage(message, endingType));
         }
     }
 
@@ -107,11 +86,6 @@ public class BluetoothConnectionHelper
         context.unbindService(serviceConnection);
     }
 
-    public Set<BluetoothDevice> getBondedDevices()
-    {
-        checkAdapterEnabled();
-        return adapter.getBondedDevices();
-    }
 
     private void checkAdapterEnabled()
     {
