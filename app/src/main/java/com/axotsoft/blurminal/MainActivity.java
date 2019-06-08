@@ -1,5 +1,8 @@
 package com.axotsoft.blurminal;
 
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.UiThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
