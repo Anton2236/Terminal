@@ -179,16 +179,18 @@ public class BluetoothDevicesDao
 
         int idInd = cursor.getColumnIndex(BluetoothDeviceContract.DeviceEntry._ID);
         int macInd = cursor.getColumnIndex(BluetoothDeviceContract.DeviceEntry._MAC_ADDRESS);
+        int nameInd = cursor.getColumnIndex(BluetoothDeviceContract.DeviceEntry._DEVICE_NAME);
         int lineEndingInd = cursor.getColumnIndex(BluetoothDeviceContract.DeviceEntry._LINE_ENDING);
         int commandsInd = cursor.getColumnIndex(BluetoothDeviceContract.DeviceEntry._COMMANDS);
         long id = cursor.getLong(idInd);
         String macAddress = cursor.getString(macInd);
+        String deviceName = cursor.getString(nameInd);
         int lineEndingId = cursor.getInt(lineEndingInd);
         byte[] commandBytes = cursor.getBlob(commandsInd);
         Gson gson = new Gson();
         List<String> commands = gson.fromJson(new String(commandBytes), new TypeToken<List<String>>()
         {
         }.getType());
-        return new BluetoothDeviceRecord(id, macAddress, LINE_ENDING_TYPE.valueOf(lineEndingId), commands);
+        return new BluetoothDeviceRecord(id, deviceName, macAddress, LINE_ENDING_TYPE.valueOf(lineEndingId), commands);
     }
 }

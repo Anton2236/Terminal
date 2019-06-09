@@ -10,11 +10,13 @@ public class BluetoothDeviceRecord
     private String macAddress;
     private LINE_ENDING_TYPE lineEnding;
     private List<String> commands;
+    private String deviceName;
 
-    BluetoothDeviceRecord(long id, String macAddress, LINE_ENDING_TYPE lineEnding, List<String> commands)
+    BluetoothDeviceRecord(long id, String macAddress, String deviceName, LINE_ENDING_TYPE lineEnding, List<String> commands)
     {
         this.id = id;
         this.macAddress = macAddress;
+        this.deviceName = deviceName;
         this.lineEnding = lineEnding;
         this.commands = commands;
     }
@@ -48,5 +50,15 @@ public class BluetoothDeviceRecord
     public void setCommands(List<String> commands)
     {
         this.commands = commands;
+    }
+
+    public void setDeviceName(String deviceName)
+    {
+        this.deviceName = deviceName;
+    }
+
+    public String getDeviceName()
+    {
+        return deviceName;
     }
 }

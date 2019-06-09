@@ -102,15 +102,10 @@ public class BluetoothDevicesManager
             BluetoothDeviceRecord record = devicesDao.getDeviceByUri(uri);
             record.setLineEnding(LINE_ENDING_TYPE.CRLF);
             record.setCommands(new ArrayList<>());
+            record.setDeviceName(device.getName());
             devicesDao.updateDevice(record);
         }
     }
-
-    public void updateDevice(BluetoothDeviceRecord record)
-    {
-        devicesDao.updateDevice(record);
-    }
-
 
     public List<BluetoothDevice> getAvailableDevices()
     {
@@ -158,7 +153,7 @@ public class BluetoothDevicesManager
         context.registerReceiver(deviceFoundReceiver, intentFilter);
     }
 
-    public List<BluetoothDevice> filterDevices(Collection<BluetoothDevice> initialDevices)
+    private List<BluetoothDevice> filterDevices(Collection<BluetoothDevice> initialDevices)
     {
         List<BluetoothDevice> devices = new ArrayList<>(initialDevices);
         List<BluetoothDeviceRecord> allDevices = getSavedDevices();
@@ -176,57 +171,5 @@ public class BluetoothDevicesManager
         }
         return devices;
 
-    }
-
-    public void addMessage(long deviceId, String message, boolean fromDevice)
-    {
-        new InsertMessageTask(devicesDao).execute(deviceId, message, fromDevice);
-    }
-
-    public void getAllMessagesForDevice(long deviceId, MessagesConsumer consumer)
-    {
-        new ShowMessagesTask(consumer, devicesDao).execute(deviceId);
-    }
-
-
-    private static class ShowMessagesTask extends AsyncTask<Object, Void, List<BluetoothMessageRecord>>
-    {
-        private MessagesConsumer consumer;
-        private BluetoothDevicesDao devicesDao;
-
-        private ShowMessagesTask(MessagesConsumer consumer, BluetoothDevicesDao devicesDao)
-        {
-            this.consumer = consumer;
-            this.devicesDao = devicesDao;
-        }
-
-        @Override
-        protected List<BluetoothMessageRecord> doInBackground(Object... objects)
-        {
-            return devicesDao.getAllMessagesForDevice((long) objects[0]);
-        }
-
-        @Override
-        protected void onPostExecute(List<BluetoothMessageRecord> messageRecords)
-        {
-            consumer.accept(messageRecords);
-        }
-    }
-
-    private static class InsertMessageTask extends AsyncTask<Object, Void, Uri>
-    {
-        private BluetoothDevicesDao devicesDao;
-
-        private InsertMessageTask(BluetoothDevicesDao devicesDao)
-        {
-            this.devicesDao = devicesDao;
-        }
-
-        @Override
-        protected Uri doInBackground(Object... objects)
-        {
-
-            return devicesDao.insertMessage((long) objects[0], (String) objects[1], (boolean) objects[2]);
-        }
     }
 }

@@ -23,6 +23,7 @@ public final class BluetoothDeviceContract
         public static final String TABLE_NAME = "devices";
 
         public static final String _COMMANDS = "commands";
+        public static final String _DEVICE_NAME = "device_name";
 
         public static final String _MAC_ADDRESS = "mac_address";
 
@@ -33,6 +34,7 @@ public final class BluetoothDeviceContract
                 {
                         _ID,
                         _MAC_ADDRESS,
+                        _DEVICE_NAME,
                         _LINE_ENDING,
                         _COMMANDS
                 };

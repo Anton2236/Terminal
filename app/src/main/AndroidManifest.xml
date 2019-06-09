@@ -12,7 +12,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name=".devices.DeviceNameChangedReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.NAME_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".widget.BluetoothWidgetClickReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver android:name=".widget.BluetoothCommandWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bluetooth_command_widget_info" />
+        </receiver>
+
+        <activity android:name=".widget.BluetoothCommandWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.DeviceChooserActivity" />
 
         <provider
             android:name=".provider.BluetoothDevicesProvider"
@@ -26,9 +53,10 @@
             android:exported="false"
             android:process="bluetooth_connection" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
