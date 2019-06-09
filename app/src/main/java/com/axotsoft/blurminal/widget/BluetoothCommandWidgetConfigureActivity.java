@@ -1,20 +1,15 @@
 package com.axotsoft.blurminal.widget;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.axotsoft.blurminal.R;
 import com.axotsoft.blurminal.activity.AbstarctDeviceChooserClientActivity;
-import com.axotsoft.blurminal.activity.DeviceChooserActivity;
-import com.axotsoft.blurminal.devices.BluetoothDevicesManager;
-import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
-import com.axotsoft.blurminal.provider.BluetoothDevicesDao;
+import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.blurminal.utils.UiUtils;
 
 import java.util.List;
@@ -26,14 +21,13 @@ import static com.axotsoft.blurminal.widget.BluetoothCommandWidgetUtils.saveWidg
  */
 public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChooserClientActivity
 {
-
-
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private EditText appWidgetTitleText;
     private EditText appWidgetCommandText;
+    private Button addButton;
 
 
-    public void onFinishButtonClick(View v)
+    public void onAddButtonClick(View v)
     {
         if (deviceRecord != null)
         {
@@ -45,7 +39,8 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChoos
                 return;
             }
             String widgetTitleText = appWidgetTitleText.getText().toString();
-            saveWidgetPreferences(this, new BluetoothWidgetData(commandText, deviceRecord.getMacAddress(), widgetTitleText, appWidgetId));
+            LINE_ENDING_TYPE lineEnding = getLineEndingType();
+            saveWidgetPreferences(this, new BluetoothWidgetData(commandText, deviceRecord.getMacAddress(), widgetTitleText, appWidgetId, lineEnding));
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -63,6 +58,11 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChoos
         }
     }
 
+    private LINE_ENDING_TYPE getLineEndingType()
+    {
+        return LINE_ENDING_TYPE.CRLF;
+    }
+
 
     @Override
     protected void updateDeviceData()
@@ -78,13 +78,6 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChoos
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
-
-        setContentView(R.layout.bluetooth_command_widget_configure);
-        appWidgetTitleText = (EditText) findViewById(R.id.appwidget_text);
-        appWidgetCommandText = (EditText) findViewById(R.id.command_text);
-        findViewById(R.id.add_button).setOnClickListener(this::onFinishButtonClick);
-
-        // Find the widget id from the intent.
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null)
@@ -99,6 +92,20 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChoos
             finish();
             return;
         }
+
+        initViews();
+
+        // Find the widget id from the intent.
+
+    }
+
+    private void initViews()
+    {
+        setContentView(R.layout.bluetooth_command_widget_configure);
+        appWidgetTitleText = findViewById(R.id.appwidget_text);
+        appWidgetCommandText = findViewById(R.id.command_text);
+        addButton = findViewById(R.id.add_button);
+        addButton.setOnClickListener(this::onAddButtonClick);
     }
 
     public void OnChooseDeviceButtonClick(View v)

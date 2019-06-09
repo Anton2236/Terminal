@@ -1,5 +1,7 @@
 package com.axotsoft.blurminal.widget;
 
+import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
+
 import java.io.Serializable;
 
 public class BluetoothWidgetData implements Serializable
@@ -12,13 +14,15 @@ public class BluetoothWidgetData implements Serializable
     private String widgetTitle;
     private int widgetId;
     private int state;
+    private LINE_ENDING_TYPE lineEnding;
 
-    public BluetoothWidgetData(String command, String macAddress, String widgetTitle, int widgetId)
+    public BluetoothWidgetData(String command, String macAddress, String widgetTitle, int widgetId, LINE_ENDING_TYPE lineEnding)
     {
         this.command = command;
         this.macAddress = macAddress;
         this.widgetTitle = widgetTitle;
         this.widgetId = widgetId;
+        this.lineEnding = lineEnding;
         this.state = STATE_IDLE;
     }
 
@@ -51,4 +55,15 @@ public class BluetoothWidgetData implements Serializable
     {
         this.state = state;
     }
+
+    public void setId(int id)
+    {
+        this.widgetId = id;
+    }
+
+    public LINE_ENDING_TYPE getLineEnding()
+    {
+        return lineEnding;
+    }
+
 }

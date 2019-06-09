@@ -14,13 +14,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
-import java.util.Set;
-
 public class BluetoothConnectionHelper
 {
-    private final static String PREFERENCES_NAME = "TERMINAL_PREFERENCES";
-    private final static String STRING_ENDING_TYPE_PREFERENCE = "STRING_ENDING_TYPE_PREFERENCE";
-
     private Context context;
     private BluetoothAdapter adapter;
     private Messenger bluetoothMessenger;

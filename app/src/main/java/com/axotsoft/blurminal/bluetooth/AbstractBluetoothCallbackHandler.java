@@ -7,7 +7,7 @@ import static com.axotsoft.blurminal.bluetooth.BluetoothConnectionHandler.*;
 
 public abstract class AbstractBluetoothCallbackHandler extends Handler
 {
-    private BluetoothConnectionHelper helper;
+    protected BluetoothConnectionHelper helper;
 
     protected AbstractBluetoothCallbackHandler(BluetoothConnectionHelper helper)
     {

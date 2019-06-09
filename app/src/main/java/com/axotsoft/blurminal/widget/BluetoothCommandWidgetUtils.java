@@ -59,7 +59,7 @@ public class BluetoothCommandWidgetUtils
         }
     }
 
-    static void deleteWidgetPref(Context context, int appWidgetId)
+    static void deleteWidgetPreferences(Context context, int appWidgetId)
     {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
