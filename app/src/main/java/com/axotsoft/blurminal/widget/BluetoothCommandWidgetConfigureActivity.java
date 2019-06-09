@@ -1,6 +1,7 @@
 package com.axotsoft.blurminal.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.axotsoft.blurminal.R;
-import com.axotsoft.blurminal.activity.AbstarctDeviceChooserClientActivity;
+import com.axotsoft.blurminal.activity.AbstractDeviceChooserClientActivity;
 import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.blurminal.utils.UiUtils;
 
@@ -19,7 +20,7 @@ import static com.axotsoft.blurminal.widget.BluetoothCommandWidgetUtils.saveWidg
 /**
  * The configuration screen for the {@link BluetoothCommandWidget BluetoothCommandWidget} AppWidget.
  */
-public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChooserClientActivity
+public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChooserClientActivity
 {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private EditText appWidgetTitleText;
@@ -92,6 +93,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstarctDeviceChoos
             finish();
             return;
         }
+
 
         initViews();
 

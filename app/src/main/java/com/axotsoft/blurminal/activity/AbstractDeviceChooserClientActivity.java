@@ -1,16 +1,35 @@
 package com.axotsoft.blurminal.activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.axotsoft.blurminal.R;
 import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
 import com.axotsoft.blurminal.provider.BluetoothDevicesDao;
+import com.axotsoft.blurminal.utils.UiUtils;
 
-public abstract class AbstarctDeviceChooserClientActivity extends Activity
+public abstract class AbstractDeviceChooserClientActivity extends Activity
 {
 
     protected BluetoothDeviceRecord deviceRecord;
+    BluetoothDevicesDao devicesDao;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        if (BluetoothAdapter.getDefaultAdapter() == null)
+        {
+            UiUtils.makeToast(this, getResources().getString(R.string.toast_bluetooth_not_supported));
+            finish();
+            return;
+        }
+        devicesDao = new BluetoothDevicesDao(this);
+
+    }
 
     @Override
     protected void onResume()
@@ -38,7 +57,8 @@ public abstract class AbstarctDeviceChooserClientActivity extends Activity
         {
             if (resultCode == RESULT_OK)
             {
-                deviceRecord = new BluetoothDevicesDao(this).getDeviceByUri(data.getData());
+
+                deviceRecord = devicesDao.getDeviceByUri(data.getData());
                 updateDeviceData();
             }
             else

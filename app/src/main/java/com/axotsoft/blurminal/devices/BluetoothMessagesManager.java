@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
 import com.axotsoft.blurminal.provider.BluetoothDevicesDao;
 import com.axotsoft.blurminal.provider.BluetoothMessageRecord;
 
@@ -12,26 +13,33 @@ import java.util.List;
 public class BluetoothMessagesManager
 {
     private BluetoothDevicesDao devicesDao;
+    private BluetoothDeviceRecord deviceRecord;
 
-    public BluetoothMessagesManager(Context context)
+    public BluetoothMessagesManager(BluetoothDevicesDao devicesDao, BluetoothDeviceRecord deviceRecord)
     {
-        this.devicesDao = new BluetoothDevicesDao(context);
+        this.devicesDao = devicesDao;
+        this.deviceRecord = deviceRecord;
     }
 
-    public void addMessage(long deviceId, String message, boolean fromDevice)
+    public void addMessage(String message, boolean fromDevice)
     {
-        new InsertMessageTask(devicesDao).execute(deviceId, message, fromDevice);
+        new InsertMessageTask(devicesDao).execute(deviceRecord.getId(), message, fromDevice);
     }
 
-    public void clearMessages(long deviceId, Runnable onDelete)
+    public void clearMessages(Runnable onDelete)
     {
-        new DeleteMessagesTask(devicesDao, onDelete).execute(deviceId);
+        new DeleteMessagesTask(devicesDao, onDelete).execute(deviceRecord.getId());
     }
 
 
-    public void getAllMessagesForDevice(long deviceId, MessagesConsumer consumer)
+    public void getAllMessagesForDevice(MessagesConsumer consumer)
     {
-        new ShowMessagesTask(consumer, devicesDao).execute(deviceId);
+        new ShowMessagesTask(consumer, devicesDao).execute(deviceRecord.getId());
+    }
+
+    public BluetoothDeviceRecord getDeviceRecord()
+    {
+        return deviceRecord;
     }
 
 
