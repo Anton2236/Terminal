@@ -4,4 +4,7 @@
     <string name="toast_enter_command">Please enter command</string>
     <string name="add_widget">Add</string>
     <string name="toast_bluetooth_not_supported">Bluetooth not supported by device</string>
+    <string name="select_device">Select Device</string>
+    <string name="enter_widget_title">Enter Widget Title</string>
+    <string name="select_command">Select Command</string>
 </resources>
