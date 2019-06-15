@@ -1,6 +1,6 @@
 package com.axotsoft.blurminal.bluetooth;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.axotsoft.blurminal.R;
 
