@@ -1,20 +1,34 @@
 package com.axotsoft.blurminal.activity;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.axotsoft.blurminal.R;
-import com.axotsoft.blurminal.widget.BluetoothCommandWidgetConfigureActivity;
+import com.axotsoft.blurminal.devices.BluetoothDevicesManager;
+import com.axotsoft.blurminal.provider.BluetoothDeviceContract;
+import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceChooserActivity extends AppCompatActivity
 {
     public static final int REQUEST_DEVICE = 1;
     private BluetoothStateChangedReceiver stateChangedReceiver;
+
+    private BluetoothDevicesManager devicesManager;
+    private RecyclerView devicesView;
+    private DevicesAdapter devicesAdapter;
+    private List<DeviceData> devices;
 
     @Override
     protected void onResume()
@@ -38,7 +52,55 @@ public class DeviceChooserActivity extends AppCompatActivity
 
     private void onBluetoothStateChanged(int state)
     {
+        devices.clear();
+        List<BluetoothDeviceRecord> records = devicesManager.getSavedDevices();
+        for (BluetoothDeviceRecord record : records)
+        {
+            devices.add(new DeviceData(record.getDeviceName(), record.getMacAddress(), true));
+        }
+        if (state == BluetoothAdapter.STATE_ON)
+        {
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            List<BluetoothDevice> bondedDevices = devicesManager.getAvailableDevices();
+            for (BluetoothDevice device : bondedDevices)
+            {
+                devices.add(new DeviceData(device.getName(), device.getAddress(), false));
+            }
+        }
+        devicesAdapter.notifyDataSetChanged();
+    }
 
+    public void onDeviceClick(DeviceData data)
+    {
+        if (data.isSaved())
+        {
+            selectDevice(data);
+        }
+        else
+        {
+            saveDevice(data.getDevice());
+        }
+    }
+
+    private void saveDevice(BluetoothDevice device)
+    {
+        if (device != null)
+        {
+            devicesManager.addDevice(device);
+        }
+    }
+
+    private void selectDevice(DeviceData data)
+    {
+        BluetoothDeviceRecord record = devicesManager.getDevicesDao().getDeviceByMacAddress(data.getAddress());
+        if (record != null)
+        {
+            Uri uri = BluetoothDeviceContract.DeviceEntry.buildUri(record.getId());
+            Intent intent = new Intent();
+            intent.setData(uri);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
 
@@ -52,6 +114,57 @@ public class DeviceChooserActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_chooser);
+
+        devicesView = findViewById(R.id.devices);
+        devicesManager = new BluetoothDevicesManager(this, this::onDeviceSaved);
+        devices = new ArrayList<>();
+        devicesAdapter = new DevicesAdapter(this::onDeviceClick, devices);
+        devicesView.setAdapter(devicesAdapter);
+    }
+
+    private void onDeviceSaved(BluetoothDevice device)
+    {
+        runOnUiThread(() ->
+        {
+            for (int i = 0; i < devices.size(); i++)
+            {
+                if (devices.get(i).getAddress().equals(device.getAddress()))
+                {
+                    devices.get(i).setSaved(true);
+                    devices.get(i).setDevice(null);
+                    devicesAdapter.notifyItemChanged(i);
+                    break;
+                }
+            }
+        });
+    }
+
+    public void onDiscoverClick(View v)
+    {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+        {
+            if (bluetoothAdapter.isDiscovering())
+            {
+                bluetoothAdapter.cancelDiscovery();
+            }
+            else
+            {
+                onBluetoothStateChanged(bluetoothAdapter.getState());
+                devicesManager.discoverNewDevices(this::onDeviceFound);
+            }
+        }
+    }
+
+    private void onDeviceFound(BluetoothDevice device)
+    {
+        runOnUiThread(() ->
+        {
+            DeviceData data = new DeviceData(device.getName(), device.getAddress(), false);
+            data.setDevice(device);
+            devices.add(data);
+            devicesAdapter.notifyItemInserted(devices.size() - 1);
+        });
     }
 
     private static class BluetoothStateChangedReceiver extends BroadcastReceiver

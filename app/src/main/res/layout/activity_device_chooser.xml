@@ -4,6 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context=".activity.DeviceChooserActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/devices"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/simple_button_idle"
+        app:layout_constraintBottom_toTopOf="@id/discover_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="9" />
+
+    <TextView
+        android:id="@+id/discover_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/simple_button_selector"
+        android:gravity="center"
+        android:onClick="onDiscoverClick"
+        android:text="@string/find_devices"
+        android:textColor="@color/colorWhite"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/devices"
+        app:layout_constraintVertical_weight="1" />
 </android.support.constraint.ConstraintLayout>

@@ -16,4 +16,5 @@
     <string name="save">SAVE</string>
     <string name="disconnect">DISCONNECT</string>
     <string name="connect">CONNECT</string>
+    <string name="find_devices">Find</string>
 </resources>

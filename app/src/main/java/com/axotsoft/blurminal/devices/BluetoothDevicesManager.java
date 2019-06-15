@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
 import com.axotsoft.blurminal.provider.BluetoothDevicesDao;
-import com.axotsoft.blurminal.provider.BluetoothMessageRecord;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +20,8 @@ public class BluetoothDevicesManager
 {
     private BluetoothDevicesDao devicesDao;
     private Context context;
-    private BluetoothDeviceConsumer deviceConsumer;
+    private BluetoothDeviceConsumer foundDeviceConsumer;
+    private BluetoothDeviceConsumer dbDevicesConsumer;
 
     private BroadcastReceiver bondedReceiver = new BroadcastReceiver()
     {
@@ -47,7 +46,7 @@ public class BluetoothDevicesManager
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            if (deviceConsumer != null)
+            if (foundDeviceConsumer != null)
             {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 List<BluetoothDevice> devices = new ArrayList<>();
@@ -55,16 +54,23 @@ public class BluetoothDevicesManager
                 devices = filterDevices(devices);
                 if (devices.size() > 0)
                 {
-                    deviceConsumer.accept(device);
+                    foundDeviceConsumer.accept(device);
                 }
             }
         }
     };
 
-    public BluetoothDevicesManager(Context context)
+    public BluetoothDevicesManager(Context context, BluetoothDeviceConsumer dbDevicesConsumer)
     {
         this.devicesDao = new BluetoothDevicesDao(context);
         this.context = context;
+        this.dbDevicesConsumer = dbDevicesConsumer;
+    }
+
+
+    public BluetoothDevicesDao getDevicesDao()
+    {
+        return devicesDao;
     }
 
     public List<BluetoothDeviceRecord> getSavedDevices()
@@ -104,6 +110,7 @@ public class BluetoothDevicesManager
             record.setCommands(new ArrayList<>());
             record.setDeviceName(device.getName());
             devicesDao.updateDevice(record);
+            dbDevicesConsumer.accept(device);
         }
     }
 
@@ -124,7 +131,7 @@ public class BluetoothDevicesManager
 
     public void discoverNewDevices(BluetoothDeviceConsumer consumer)
     {
-        this.deviceConsumer = consumer;
+        this.foundDeviceConsumer = consumer;
         registerDiscoveredReceiver();
         BluetoothAdapter.getDefaultAdapter().startDiscovery();
         registerDiscoveryStopReceiver();
@@ -141,7 +148,7 @@ public class BluetoothDevicesManager
             {
                 context.unregisterReceiver(deviceFoundReceiver);
                 context.unregisterReceiver(this);
-                deviceConsumer = null;
+                foundDeviceConsumer = null;
             }
         }, intentFilter);
     }
