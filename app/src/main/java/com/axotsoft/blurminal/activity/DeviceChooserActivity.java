@@ -1,5 +1,6 @@
 package com.axotsoft.blurminal.activity;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -20,7 +21,7 @@ import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceChooserActivity extends AppCompatActivity
+public class DeviceChooserActivity extends Activity
 {
     public static final int REQUEST_DEVICE = 1;
     private BluetoothStateChangedReceiver stateChangedReceiver;
