@@ -1,19 +1,20 @@
 package com.axotsoft.blurminal.widget;
 
 import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.axotsoft.blurminal.R;
 import com.axotsoft.blurminal.activity.AbstractDeviceChooserClientActivity;
 import com.axotsoft.blurminal.bluetooth.LINE_ENDING_TYPE;
+import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
 import com.axotsoft.blurminal.utils.UiUtils;
-
-import java.util.List;
 
 import static com.axotsoft.blurminal.widget.BluetoothCommandWidgetUtils.saveWidgetPreferences;
 
@@ -26,7 +27,11 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
     private EditText appWidgetTitleText;
     private EditText appWidgetCommandText;
     private Button addButton;
-
+    private TextView deviceText;
+    private LinearLayout configurationContainer;
+    private TextView lineEndingText;
+    private RecyclerView commandsContainer;
+    private LINE_ENDING_TYPE currentLineEnding;
 
     public void onAddButtonClick(View v)
     {
@@ -40,8 +45,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
                 return;
             }
             String widgetTitleText = appWidgetTitleText.getText().toString();
-            LINE_ENDING_TYPE lineEnding = getLineEndingType();
-            saveWidgetPreferences(this, new BluetoothWidgetData(commandText, deviceRecord.getMacAddress(), widgetTitleText, appWidgetId, lineEnding));
+            saveWidgetPreferences(this, new BluetoothWidgetData(commandText, deviceRecord.getMacAddress(), widgetTitleText, appWidgetId, currentLineEnding));
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -59,16 +63,46 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
         }
     }
 
-    private LINE_ENDING_TYPE getLineEndingType()
+    @Override
+    protected void updateDeviceData(BluetoothDeviceRecord deviceRecord)
     {
-        return LINE_ENDING_TYPE.CRLF;
+        if (deviceRecord == null)
+        {
+            deviceText.setText(R.string.select_device);
+            configurationContainer.setVisibility(View.GONE);
+        }
+        else
+        {
+            deviceText.setText(deviceRecord.getDeviceName());
+            configurationContainer.setVisibility(View.VISIBLE);
+            appWidgetCommandText.setText("");
+            appWidgetTitleText.setText("");
+            if (deviceRecord.getCommands() != null && deviceRecord.getCommands().size() > 0)
+            {
+                commandsContainer.setVisibility(View.VISIBLE);
+                commandsContainer.setAdapter(new CommandsAdapter(deviceRecord.getCommands(), appWidgetCommandText::setText, R.layout.command_layout));
+            }
+            else
+            {
+                commandsContainer.setVisibility(View.GONE);
+            }
+            setLineEnding(deviceRecord.getLineEnding());
+        }
     }
 
-
-    @Override
-    protected void updateDeviceData()
+    private void setLineEnding(LINE_ENDING_TYPE lineEnding)
     {
-        updateCommandsList(deviceRecord.getCommands());
+        currentLineEnding = lineEnding;
+        if (currentLineEnding == null)
+        {
+            currentLineEnding = LINE_ENDING_TYPE.NONE;
+        }
+        lineEndingText.setText(currentLineEnding.getText());
+    }
+
+    public void switchLineEnding(View v)
+    {
+        setLineEnding(currentLineEnding.getNext());
     }
 
     @Override
@@ -93,10 +127,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
             finish();
             return;
         }
-
-
         initViews();
-
         // Find the widget id from the intent.
 
     }
@@ -104,21 +135,19 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
     private void initViews()
     {
         setContentView(R.layout.bluetooth_command_widget_configure);
+        deviceText = findViewById(R.id.configure_device_text);
         appWidgetTitleText = findViewById(R.id.appwidget_text);
         appWidgetCommandText = findViewById(R.id.command_text);
+        lineEndingText = findViewById(R.id.line_ending_chooser);
+        commandsContainer = findViewById(R.id.commands_container);
         addButton = findViewById(R.id.add_button);
+        configurationContainer = findViewById(R.id.widget_configurator);
         addButton.setOnClickListener(this::onAddButtonClick);
     }
 
-    public void OnChooseDeviceButtonClick(View v)
+    public void onChooseDeviceButtonClick(View v)
     {
         startChoosingActivity();
-    }
-
-
-    private void updateCommandsList(List<String> commands)
-    {
-
     }
 }
 

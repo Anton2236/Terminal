@@ -33,20 +33,20 @@ public abstract class AbstractBluetoothCallbackHandler extends Handler
             case STATUS_DISCONNECTED:
             {
                 helper.unbind();
-                OnDisconnect();
+                onDisconnect();
                 break;
             }
             case STATUS_ERROR:
             {
-                OnError((Exception) msg.obj);
+                onError((Exception) msg.obj);
                 break;
             }
         }
     }
 
-    protected abstract void OnError(Exception e);
+    protected abstract void onError(Exception e);
 
-    protected abstract void OnDisconnect();
+    protected abstract void onDisconnect();
 
     protected abstract void processMessage(String msg);
 

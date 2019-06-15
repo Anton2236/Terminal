@@ -1,15 +1,23 @@
 package com.axotsoft.blurminal.bluetooth;
 
+import android.support.annotation.StringRes;
+
+import com.axotsoft.blurminal.R;
+
 public enum LINE_ENDING_TYPE
 {
-    NONE(0, ""), CR(1, "\n"), LF(2, "\r"), CRLF(3, "\n\r");
+    NONE(0, "", R.string.empty_line_ending), CR(1, "\n", R.string.cr), LF(2, "\r", R.string.lf), CRLF(3, "\n\r", R.string.crlf);
     private int key;
     private String ending;
+    private @StringRes
+    int text;
 
-    LINE_ENDING_TYPE(int key, String ending)
+
+    LINE_ENDING_TYPE(int key, String ending, int text)
     {
         this.key = key;
         this.ending = ending;
+        this.text = text;
     }
 
     public int getKey()
@@ -34,5 +42,27 @@ public enum LINE_ENDING_TYPE
             }
         }
         return stringEndingType;
+    }
+
+    public LINE_ENDING_TYPE getNext()
+    {
+        switch (this)
+        {
+            case CRLF:
+                return NONE;
+            case NONE:
+                return CR;
+            case CR:
+                return LF;
+            case LF:
+            default:
+                return CRLF;
+        }
+    }
+
+    public @StringRes
+    int getText()
+    {
+        return text;
     }
 }

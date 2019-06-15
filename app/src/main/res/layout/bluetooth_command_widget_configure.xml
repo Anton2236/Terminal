@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".widget.BluetoothCommandWidgetConfigureActivity">
 
     <TextView
         android:id="@+id/configure_device_text"
@@ -13,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:background="@drawable/simple_button_selector"
+        android:onClick="onChooseDeviceButtonClick"
         android:padding="10dp"
         android:text="@string/select_device"
         android:textAlignment="center"
@@ -29,8 +33,9 @@
         <EditText
             android:id="@+id/appwidget_text"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="20dp"
+            android:layout_weight="2"
             android:background="@drawable/simple_edit_text_selector"
             android:gravity="center"
             android:hint="@string/enter_widget_title"
@@ -40,56 +45,63 @@
             android:textColorHint="@color/colorGrayText"
             android:textSize="20dp" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+            android:layout_weight="2">
 
             <EditText
                 android:id="@+id/command_text"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/simple_edit_text_selector"
                 android:gravity="center"
-                android:hint="@string/select_command"
+                android:hint="@string/enter_command"
                 android:inputType="text"
                 android:padding="5dp"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorGrayText"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/line_ending_chooser"
+                app:layout_constraintHorizontal_weight="5"
+                app:layout_constraintStart_toStartOf="parent" />
+
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="4"
+                android:id="@+id/line_ending_chooser"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/simple_button_selector"
                 android:gravity="center"
-                android:text="CR/LF"
+                android:onClick="switchLineEnding"
+                android:text="@string/empty_line_ending"
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/command_text" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/commands_container"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
+            android:layout_weight="6"
             android:background="@drawable/simple_button_idle"
             android:padding="25dp" />
 
         <Button
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
+            android:layout_weight="1.8"
             android:background="@drawable/simple_button_selector"
             android:text="@string/add_widget"
             android:textColor="@color/colorWhite" />

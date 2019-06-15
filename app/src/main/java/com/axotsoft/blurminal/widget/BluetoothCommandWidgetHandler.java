@@ -23,13 +23,13 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
     }
 
     @Override
-    protected void OnError(Exception e)
+    protected void onError(Exception e)
     {
 
     }
 
     @Override
-    protected void OnDisconnect()
+    protected void onDisconnect()
     {
         BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_IDLE);
         this.onDisconnect.run();

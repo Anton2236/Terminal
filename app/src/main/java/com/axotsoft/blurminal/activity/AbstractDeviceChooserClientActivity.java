@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.axotsoft.blurminal.R;
 import com.axotsoft.blurminal.provider.BluetoothDeviceRecord;
@@ -37,9 +36,9 @@ public abstract class AbstractDeviceChooserClientActivity extends Activity
         super.onResume();
         if (deviceRecord != null)
         {
-            deviceRecord = new BluetoothDevicesDao(this).getDeviceById(deviceRecord.getId());
-            updateDeviceData();
+            deviceRecord = devicesDao.getDeviceById(deviceRecord.getId());
         }
+        updateDeviceData(deviceRecord);
     }
 
     protected void startChoosingActivity()
@@ -48,7 +47,7 @@ public abstract class AbstractDeviceChooserClientActivity extends Activity
         startActivityForResult(intent, DeviceChooserActivity.REQUEST_DEVICE);
     }
 
-    protected abstract void updateDeviceData();
+    protected abstract void updateDeviceData(BluetoothDeviceRecord deviceRecord);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -57,9 +56,7 @@ public abstract class AbstractDeviceChooserClientActivity extends Activity
         {
             if (resultCode == RESULT_OK)
             {
-
                 deviceRecord = devicesDao.getDeviceByUri(data.getData());
-                updateDeviceData();
             }
             else
             {
