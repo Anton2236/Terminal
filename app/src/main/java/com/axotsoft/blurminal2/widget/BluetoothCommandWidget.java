@@ -3,6 +3,7 @@ package com.axotsoft.blurminal2.widget;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.widget.RemoteViews;
 
@@ -26,7 +27,7 @@ public class BluetoothCommandWidget extends AppWidgetProvider
             views.setTextViewText(R.id.appwidget_text, widgetData.getWidgetTitle());
             int color = widgetData.getState() == BluetoothWidgetData.STATE_CONNECTED ? R.color.colorLightBlue : R.color.colorBlack;
             views.setTextColor(R.id.appwidget_text, context.getColor(color));
-            views.setOnClickPendingIntent(R.id.appwidget_button, CommandWidgetService.makeIntent(context, widgetData.getWidgetId()));
+            views.setOnClickPendingIntent(R.id.appwidget_button, WidgetClickReceiver.makeIntent(context, widgetData.getWidgetId()));
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

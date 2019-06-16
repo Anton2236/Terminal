@@ -32,10 +32,14 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
     @Override
     protected void onDisconnect()
     {
-        helper.unbind();
+        if (helper != null)
+        {
+            helper.unbind();
+        }
         BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_IDLE);
         this.onDisconnect.run();
         connected = false;
+        helper = null;
     }
 
     @Override
@@ -51,7 +55,11 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
         {
             if (SystemClock.uptimeMillis() >= disconnectTime)
             {
-                helper.disconnect();
+                if (helper != null)
+                {
+                    helper.disconnect();
+                }
+                connected = false;
             }
         }, disconnectTime);
     }

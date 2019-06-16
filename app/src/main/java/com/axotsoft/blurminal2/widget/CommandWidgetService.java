@@ -1,11 +1,17 @@
 package com.axotsoft.blurminal2.widget;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
+
+import androidx.core.app.NotificationCompat;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +29,21 @@ public class CommandWidgetService extends Service
     {
         super.onCreate();
         handlerMap = new ConcurrentHashMap<>();
+        String CHANNEL_ID = "chanel_widget";
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                "Widget Chanel",
+                NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableVibration(false);
+        channel.setSound(null, null);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Blurminal")
+                .setContentText("Bluetooth connection")
+                .build();
+        startForeground(1, notification);
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
@@ -55,11 +75,11 @@ public class CommandWidgetService extends Service
     }
 
 
-    public static PendingIntent makeIntent(Context context, int widgetId)
+    public static Intent makeIntent(Context context, int widgetId)
     {
         Intent intent = new Intent(context, CommandWidgetService.class);
         intent.putExtra(EXTRA_WIDGET_ID, widgetId);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return intent;
     }
 
 }
