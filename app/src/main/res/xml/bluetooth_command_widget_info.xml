@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.axotsoft.blurminal.widget.BluetoothCommandWidgetConfigureActivity"
+    android:configure="com.axotsoft.blurminal2.widget.BluetoothCommandWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/bluetooth_command_widget"
     android:initialLayout="@layout/bluetooth_command_widget"
-    android:minWidth="256dp"
-    android:minHeight="256dp"
+    android:minWidth="30dp"
+    android:minHeight="30dp"
     android:previewImage="@drawable/round_button_idle"
     android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen" />

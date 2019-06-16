@@ -1,18 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/appwidget_button"
-    android:layout_width="256dp"
-    android:layout_height="256dp"
-    android:background="@drawable/round_button">
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:background="@drawable/round_button"
+    android:clickable="true"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/appwidget_text"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
+        android:text="gates"
         android:textColor="@color/colorBlack"
-        android:textSize="40sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
 </RelativeLayout>

@@ -17,4 +17,5 @@
     <string name="disconnect">DISCONNECT</string>
     <string name="connect">CONNECT</string>
     <string name="find_devices">Find</string>
+    <string name="device_not_connected">Device not connected</string>
 </resources>
