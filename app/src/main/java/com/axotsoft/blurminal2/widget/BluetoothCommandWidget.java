@@ -25,7 +25,7 @@ public class BluetoothCommandWidget extends AppWidgetProvider
         {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bluetooth_command_widget);
             views.setTextViewText(R.id.appwidget_text, widgetData.getWidgetTitle());
-            int color = widgetData.getState() == BluetoothWidgetData.STATE_CONNECTED ? R.color.colorLightBlue : R.color.colorBlack;
+            int color = widgetData.getState() == BluetoothWidgetData.STATE_CONNECTED ? R.color.colorGreen : R.color.colorBlack;
             views.setTextColor(R.id.appwidget_text, context.getColor(color));
             views.setOnClickPendingIntent(R.id.appwidget_button, WidgetClickReceiver.makeIntent(context, widgetData.getWidgetId()));
             // Instruct the widget manager to update the widget

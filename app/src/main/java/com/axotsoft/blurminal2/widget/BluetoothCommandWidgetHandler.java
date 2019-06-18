@@ -11,16 +11,42 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
     private Context context;
     private BluetoothWidgetData widgetData;
     private long disconnectTime = -1;
+    private Runnable preOnDisconnect;
     private Runnable onDisconnect;
     private boolean connected;
 
-    protected BluetoothCommandWidgetHandler(Context context, BluetoothWidgetData widgetData, Runnable onDisconnect)
+    private final Object sync = new Object();
+
+    protected BluetoothCommandWidgetHandler(Context context, BluetoothWidgetData widgetData, Runnable preOnDisconnect)
     {
         super(null);
         this.context = context;
         this.widgetData = widgetData;
-        this.onDisconnect = onDisconnect;
+        this.preOnDisconnect = preOnDisconnect;
         connected = false;
+    }
+
+    public void addRunnable(Runnable runnable)
+    {
+        synchronized (sync)
+        {
+            if (widgetData != null)
+            {
+                Runnable oldRunnable = onDisconnect;
+                this.onDisconnect = () ->
+                {
+                    if (oldRunnable != null)
+                    {
+                        oldRunnable.run();
+                    }
+                    runnable.run();
+                };
+            }
+            else
+            {
+                runnable.run();
+            }
+        }
     }
 
     @Override
@@ -35,11 +61,16 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
         if (helper != null)
         {
             helper.unbind();
+            BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_IDLE);
+            this.preOnDisconnect.run();
+            synchronized (sync)
+            {
+                this.onDisconnect.run();
+                widgetData = null;
+            }
+            connected = false;
+            helper = null;
         }
-        BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_IDLE);
-        this.onDisconnect.run();
-        connected = false;
-        helper = null;
     }
 
     @Override

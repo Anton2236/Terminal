@@ -3,10 +3,8 @@ package com.axotsoft.blurminal2.widget;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
@@ -56,13 +54,10 @@ public class CommandWidgetService extends Service
             handler = handlerMap.get(widgetId);
             if (handler == null)
             {
-                handler = new BluetoothCommandWidgetHandler(getApplicationContext(), widgetData, () ->
-                {
-                    handlerMap.remove(widgetId);
-                    stopSelf(startId);
-                });
+                handler = new BluetoothCommandWidgetHandler(getApplicationContext(), widgetData, () -> handlerMap.remove(widgetId));
                 handlerMap.put(widgetId, handler);
             }
+            handler.addRunnable(() -> stopSelf(startId));
             handler.trySendMessage();
         }
         return START_NOT_STICKY;

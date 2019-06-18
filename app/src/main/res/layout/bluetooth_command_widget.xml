@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/appwidget_button"
-    android:layout_width="60dp"
-    android:layout_height="60dp"
+    android:layout_width="55dp"
+    android:layout_height="55dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/round_button"
     android:clickable="true"
     android:padding="5dp">
@@ -14,7 +15,7 @@
         android:layout_centerVertical="true"
         android:gravity="center"
         android:textColor="@color/colorBlack"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 </RelativeLayout>
