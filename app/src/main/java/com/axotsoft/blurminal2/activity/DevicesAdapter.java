@@ -48,16 +48,16 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
     {
         private DeviceData data;
         private DeviceActionConsumer deviceActionConsumer;
-        private View view;
         private View plusView;
+        private View container;
         private TextView deviceNameText;
         private TextView deviceAddressText;
 
         public ViewHolder(@NonNull View itemView, DeviceActionConsumer deviceActionConsumer)
         {
             super(itemView);
-            view = itemView;
             plusView = itemView.findViewById(R.id.add_button);
+            container = itemView.findViewById(R.id.device_button);
             deviceNameText = itemView.findViewById(R.id.device_name);
             deviceAddressText = itemView.findViewById(R.id.device_address);
             this.deviceActionConsumer = deviceActionConsumer;
@@ -68,14 +68,14 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
             this.data = deviceData;
             if (data.isSaved())
             {
-                view.setOnClickListener(this::onClick);
-                view.setBackgroundResource(R.drawable.simple_button_selector);
+                container.setOnClickListener(this::onClick);
+                container.setBackgroundResource(R.drawable.simple_button_selector);
                 plusView.setVisibility(View.GONE);
             }
             else
             {
-                view.setOnClickListener(null);
-                view.setBackgroundResource(R.color.colorBlack);
+                container.setOnClickListener(null);
+                container.setBackgroundResource(R.drawable.simple_button_inactive);
                 plusView.setOnClickListener(this::onClick);
                 plusView.setVisibility(View.VISIBLE);
             }

@@ -64,7 +64,7 @@ public class BluetoothDevicesManager
             @Override
             public void onReceive(Context context, Intent intent)
             {
-                if (foundDeviceConsumer != null)
+                if (foundDeviceConsumer != null && BluetoothDevice.ACTION_FOUND.equals(intent.getAction()))
                 {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     List<BluetoothDevice> devices = new ArrayList<>();
@@ -147,10 +147,13 @@ public class BluetoothDevicesManager
 
     private void registerBondedReceiver()
     {
-        bondedReceiver = getBondedReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        context.registerReceiver(bondedReceiver, intentFilter);
+        if (bondedReceiver == null)
+        {
+            bondedReceiver = getBondedReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+            context.registerReceiver(bondedReceiver, intentFilter);
+        }
     }
 
 
@@ -184,28 +187,35 @@ public class BluetoothDevicesManager
         }
         else
         {
-
-            this.foundDeviceConsumer = consumer;
-            registerDiscoveredReceiver();
-            BluetoothAdapter.getDefaultAdapter().startDiscovery();
-            registerDiscoveryStopReceiver();
+            if (adapter.startDiscovery())
+            {
+                this.foundDeviceConsumer = consumer;
+                registerDiscoveredReceiver();
+                registerDiscoveryStopReceiver();
+            }
         }
     }
 
     private void registerDiscoveryStopReceiver()
     {
-        discoveryStopReceiver = getDiscoveryStopReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        context.registerReceiver(discoveryStopReceiver, intentFilter);
+        if (discoveryStopReceiver == null)
+        {
+            discoveryStopReceiver = getDiscoveryStopReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+            context.registerReceiver(discoveryStopReceiver, intentFilter);
+        }
     }
 
     private void registerDiscoveredReceiver()
     {
-        deviceFoundReceiver = getFoundReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        context.registerReceiver(deviceFoundReceiver, intentFilter);
+        if (deviceFoundReceiver == null)
+        {
+            deviceFoundReceiver = getFoundReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+            context.registerReceiver(deviceFoundReceiver, intentFilter);
+        }
     }
 
 

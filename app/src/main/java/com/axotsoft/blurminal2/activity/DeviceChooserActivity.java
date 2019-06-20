@@ -27,7 +27,6 @@ public class DeviceChooserActivity extends AppCompatActivity
     private BluetoothStateChangedReceiver stateChangedReceiver;
 
     private BluetoothDevicesManager devicesManager;
-    private RecyclerView devicesView;
     private DevicesAdapter devicesAdapter;
     private List<DeviceData> devices;
 
@@ -38,6 +37,7 @@ public class DeviceChooserActivity extends AppCompatActivity
         stateChangedReceiver = new BluetoothStateChangedReceiver(this);
         IntentFilter intentFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(stateChangedReceiver, intentFilter);
+        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
         onBluetoothStateChanged(BluetoothAdapter.getDefaultAdapter().getState());
     }
 
@@ -62,7 +62,6 @@ public class DeviceChooserActivity extends AppCompatActivity
         }
         if (state == BluetoothAdapter.STATE_ON)
         {
-            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             List<BluetoothDevice> bondedDevices = devicesManager.getAvailableDevices();
             for (BluetoothDevice device : bondedDevices)
             {
@@ -119,10 +118,10 @@ public class DeviceChooserActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_chooser);
 
-        devicesView = findViewById(R.id.devices);
         devicesManager = new BluetoothDevicesManager(this, this::onDeviceSaved);
         devices = new ArrayList<>();
         devicesAdapter = new DevicesAdapter(this::onDeviceClick, devices);
+        RecyclerView devicesView = findViewById(R.id.devices);
         devicesView.setAdapter(devicesAdapter);
     }
 
@@ -181,6 +180,7 @@ public class DeviceChooserActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent)
         {
             int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_DISCONNECTED);
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             activity.onBluetoothStateChanged(state);
         }
     }
