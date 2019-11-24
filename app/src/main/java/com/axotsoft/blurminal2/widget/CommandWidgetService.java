@@ -60,6 +60,10 @@ public class CommandWidgetService extends Service
             handler.addRunnable(() -> stopSelf(startId));
             handler.trySendMessage();
         }
+        else
+        {
+            stopSelf(startId);
+        }
         return START_NOT_STICKY;
     }
 

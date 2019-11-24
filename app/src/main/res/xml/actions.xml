@@ -1,0 +1,21 @@
+<?xml version ="1.0" encoding ="utf-8"?><!--  Learn More about how to use App Actions: https://developer.android.com/guide/actions/index.html -->
+<actions>
+    <action intentName="actions.intent.OPEN_APP_FEATURE">
+        <parameter name="feature">
+            <entity-set-reference entitySetId="FeatureEntitySet" />
+        </parameter>
+        <fulfillment
+            fulfillmentMode="actions.fulfillment.SLICE"
+            urlTemplate="content://com.axotsoft.blurminal2.slice/command">
+            <!--            <parameter-mapping-->
+            <!--                intentParameter="account.name"-->
+            <!--                urlParameter="accountName" />-->
+        </fulfillment>
+        <fulfillment urlTemplate="http://com.axotsoft.blurminal2/command" />
+    </action>
+    <entity-set entitySetId="FeatureEntitySet">
+        <entity
+            name="open gates"
+            identifier="OPEN_GATES" />
+    </entity-set>
+</actions>
