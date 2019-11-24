@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Blurminal</string>
+    <string name="app_name">Terb</string>
     <string name="toast_select_device">Select device</string>
     <string name="toast_enter_command">Please enter command</string>
     <string name="add_widget">Add</string>

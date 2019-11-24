@@ -6,16 +6,18 @@
         </parameter>
         <fulfillment
             fulfillmentMode="actions.fulfillment.SLICE"
-            urlTemplate="content://com.axotsoft.blurminal2.slice/command">
-            <!--            <parameter-mapping-->
-            <!--                intentParameter="account.name"-->
-            <!--                urlParameter="accountName" />-->
+            urlTemplate="content://com.axotsoft.terb.slice/command{?appFeature}">
+            <parameter-mapping
+                intentParameter="feature"
+                required="true"
+                urlParameter="appFeature" />
         </fulfillment>
-        <fulfillment urlTemplate="http://com.axotsoft.blurminal2/command" />
+        <fulfillment
+            urlTemplate="https://com.axotsoft.terb/command" />
     </action>
     <entity-set entitySetId="FeatureEntitySet">
         <entity
-            name="open gates"
-            identifier="OPEN_GATES" />
+            name="Gates"
+            identifier="Gates" />
     </entity-set>
 </actions>
