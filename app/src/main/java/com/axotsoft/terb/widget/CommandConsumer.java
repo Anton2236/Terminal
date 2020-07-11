@@ -1,6 +1,5 @@
 package com.axotsoft.terb.widget;
 
-public interface CommandConsumer
-{
+public interface CommandConsumer {
     void accept(String command);
 }

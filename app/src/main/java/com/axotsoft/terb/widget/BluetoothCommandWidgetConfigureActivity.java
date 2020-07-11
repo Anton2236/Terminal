@@ -3,14 +3,13 @@ package com.axotsoft.terb.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
 import com.axotsoft.terb.activity.AbstractDeviceChooserClientActivity;
@@ -23,8 +22,7 @@ import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.saveWidgetPre
 /**
  * The configuration screen for the {@link BluetoothCommandWidget BluetoothCommandWidget} AppWidget.
  */
-public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChooserClientActivity
-{
+public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChooserClientActivity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private EditText appWidgetTitleText;
     private EditText appWidgetCommandText;
@@ -35,14 +33,11 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
     private RecyclerView commandsContainer;
     private LINE_ENDING_TYPE currentLineEnding;
 
-    public void onAddButtonClick(View v)
-    {
-        if (deviceRecord != null)
-        {
+    public void onAddButtonClick(View v) {
+        if (deviceRecord != null) {
             // When the button is clicked, store the string locally
             String commandText = appWidgetCommandText.getText().toString();
-            if (commandText.isEmpty())
-            {
+            if (commandText.isEmpty()) {
                 UiUtils.makeToast(this, getResources().getString(R.string.toast_enter_command));
                 return;
             }
@@ -59,57 +54,47 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
             setResult(RESULT_OK, resultValue);
             finish();
         }
-        else
-        {
+        else {
             UiUtils.makeToast(this, getResources().getString(R.string.toast_select_device));
         }
     }
 
     @Override
-    protected void updateDeviceData(BluetoothDeviceRecord deviceRecord)
-    {
-        if (deviceRecord == null)
-        {
+    protected void updateDeviceData(BluetoothDeviceRecord deviceRecord) {
+        if (deviceRecord == null) {
             deviceText.setText(R.string.select_device);
             configurationContainer.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             deviceText.setText(deviceRecord.getDeviceName());
             configurationContainer.setVisibility(View.VISIBLE);
             appWidgetCommandText.setText("");
             appWidgetTitleText.setText("");
-            if (deviceRecord.getCommands() != null && deviceRecord.getCommands().size() > 0)
-            {
+            if (deviceRecord.getCommands() != null && deviceRecord.getCommands().size() > 0) {
                 commandsContainer.setVisibility(View.VISIBLE);
                 commandsContainer.setAdapter(new CommandsAdapter(deviceRecord.getCommands(), appWidgetCommandText::setText, null, R.layout.command_layout));
             }
-            else
-            {
+            else {
                 commandsContainer.setVisibility(View.GONE);
             }
             setLineEnding(deviceRecord.getLineEnding());
         }
     }
 
-    private void setLineEnding(LINE_ENDING_TYPE lineEnding)
-    {
+    private void setLineEnding(LINE_ENDING_TYPE lineEnding) {
         currentLineEnding = lineEnding;
-        if (currentLineEnding == null)
-        {
+        if (currentLineEnding == null) {
             currentLineEnding = LINE_ENDING_TYPE.NONE;
         }
         lineEndingText.setText(currentLineEnding.getText());
     }
 
-    public void switchLineEnding(View v)
-    {
+    public void switchLineEnding(View v) {
         setLineEnding(currentLineEnding.getNext());
     }
 
     @Override
-    public void onCreate(Bundle icicle)
-    {
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
@@ -117,15 +102,13 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
         setResult(RESULT_CANCELED);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        if (extras != null)
-        {
+        if (extras != null) {
             appWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
         // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID)
-        {
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
             return;
         }
@@ -134,8 +117,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
         setContentView(R.layout.bluetooth_command_widget_configure);
         deviceText = findViewById(R.id.configure_device_text);
         appWidgetTitleText = findViewById(R.id.appwidget_text);
@@ -147,8 +129,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChoos
         addButton.setOnClickListener(this::onAddButtonClick);
     }
 
-    public void onChooseDeviceButtonClick(View v)
-    {
+    public void onChooseDeviceButtonClick(View v) {
         startChoosingActivity();
     }
 }

@@ -18,15 +18,13 @@ import androidx.slice.builders.SliceAction;
 import com.axotsoft.terb.R;
 import com.axotsoft.terb.widget.WidgetClickReceiver;
 
-public class CommandSliceProvider extends SliceProvider
-{
+public class CommandSliceProvider extends SliceProvider {
     /**
      * Instantiate any required objects. Return true if the provider was successfully created,
      * false otherwise.
      */
     @Override
-    public boolean onCreateSliceProvider()
-    {
+    public boolean onCreateSliceProvider() {
         return true;
     }
 
@@ -35,19 +33,16 @@ public class CommandSliceProvider extends SliceProvider
      */
     @Override
     @NonNull
-    public Uri onMapIntentToUri(@Nullable Intent intent)
-    {
+    public Uri onMapIntentToUri(@Nullable Intent intent) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT);
         if (intent == null) return uriBuilder.build();
         Uri data = intent.getData();
-        if (data != null && data.getPath() != null)
-        {
+        if (data != null && data.getPath() != null) {
             String path = data.getPath().replace("/command", "");
             uriBuilder = uriBuilder.path(path);
         }
         Context context = getContext();
-        if (context != null)
-        {
+        if (context != null) {
             uriBuilder = uriBuilder.authority(context.getPackageName());
         }
         return uriBuilder.build();
@@ -56,10 +51,8 @@ public class CommandSliceProvider extends SliceProvider
     /**
      * Construct the Slice and bind data if available.
      */
-    public Slice onBindSlice(Uri sliceUri)
-    {
-        if ("/".equals(sliceUri.getPath()))
-        {
+    public Slice onBindSlice(Uri sliceUri) {
+        if ("/".equals(sliceUri.getPath())) {
             // Path recognized. Customize the Slice using the androidx.slice.builders API.
             // Note: ANRs and strict mode is enforced here so don't do any heavy operations.
             // Only bind data that is currently available in memory.
@@ -70,20 +63,18 @@ public class CommandSliceProvider extends SliceProvider
                     )
                     .build();
         }
-        else
-        {
+        else {
             // Error: Path not found.
             return new ListBuilder(getContext(), sliceUri, ListBuilder.INFINITY)
                     .addRow(
                             new RowBuilder()
-                                    .setTitle(sliceUri.getQuery()).setPrimaryAction(getSliceAction(getContext()))
+                                    .setTitle(sliceUri.getQueryParameter("appFeature") + "s").setPrimaryAction(getSliceAction(getContext()))
                     )
                     .build();
         }
     }
 
-    private SliceAction getSliceAction(Context context)
-    {
+    private SliceAction getSliceAction(Context context) {
 
         return SliceAction.create(WidgetClickReceiver.makeIntent(context, AppWidgetManager.INVALID_APPWIDGET_ID), IconCompat.createWithResource(context, R.mipmap.ic_launcher),
                 ListBuilder.SMALL_IMAGE, "Test");
@@ -93,8 +84,7 @@ public class CommandSliceProvider extends SliceProvider
      * Slice has been pinned to external process. Subscribe to data source if necessary.
      */
     @Override
-    public void onSlicePinned(Uri sliceUri)
-    {
+    public void onSlicePinned(Uri sliceUri) {
         // When data is received, call context.contentResolver.notifyChange(sliceUri, null) to
         // trigger CommandSliceProvider#onBindSlice(Uri) again.
     }
@@ -103,8 +93,7 @@ public class CommandSliceProvider extends SliceProvider
      * Unsubscribe from data source if necessary.
      */
     @Override
-    public void onSliceUnpinned(Uri sliceUri)
-    {
+    public void onSliceUnpinned(Uri sliceUri) {
         // Remove any observers if necessary to avoid memory leaks.
     }
 }

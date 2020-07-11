@@ -16,6 +16,9 @@
     <string name="save">SAVE</string>
     <string name="disconnect">DISCONNECT</string>
     <string name="connect">CONNECT</string>
-    <string name="find_devices">Find</string>
+    <string name="find_devices">Find Devices</string>
+    <string name="searching">Searching…</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
+    <string name="pair">Pair</string>
     <string name="device_not_connected">Device not connected</string>
 </resources>

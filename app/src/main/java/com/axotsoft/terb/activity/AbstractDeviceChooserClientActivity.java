@@ -11,18 +11,15 @@ import com.axotsoft.terb.provider.BluetoothDeviceRecord;
 import com.axotsoft.terb.provider.BluetoothDevicesDao;
 import com.axotsoft.terb.utils.UiUtils;
 
-public abstract class AbstractDeviceChooserClientActivity extends AppCompatActivity
-{
+public abstract class AbstractDeviceChooserClientActivity extends AppCompatActivity {
 
     protected BluetoothDeviceRecord deviceRecord;
     BluetoothDevicesDao devicesDao;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BluetoothAdapter.getDefaultAdapter() == null)
-        {
+        if (BluetoothAdapter.getDefaultAdapter() == null) {
             UiUtils.makeToast(this, getResources().getString(R.string.toast_bluetooth_not_supported));
             finish();
             return;
@@ -32,18 +29,15 @@ public abstract class AbstractDeviceChooserClientActivity extends AppCompatActiv
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        if (deviceRecord != null)
-        {
+        if (deviceRecord != null) {
             deviceRecord = devicesDao.getDeviceById(deviceRecord.getId());
         }
         updateDeviceData(deviceRecord);
     }
 
-    protected void startChoosingActivity()
-    {
+    protected void startChoosingActivity() {
         Intent intent = DeviceChooserActivity.makeIntent(this);
         startActivityForResult(intent, DeviceChooserActivity.REQUEST_DEVICE);
     }
@@ -51,16 +45,13 @@ public abstract class AbstractDeviceChooserClientActivity extends AppCompatActiv
     protected abstract void updateDeviceData(BluetoothDeviceRecord deviceRecord);
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == DeviceChooserActivity.REQUEST_DEVICE)
-        {
-            if (resultCode == RESULT_OK)
-            {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DeviceChooserActivity.REQUEST_DEVICE) {
+            if (resultCode == RESULT_OK) {
                 deviceRecord = devicesDao.getDeviceByUri(data.getData());
             }
-            else
-            {
+            else {
                 deviceRecord = null;
             }
         }

@@ -11,16 +11,13 @@ import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.deleteWidgetP
 import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.getWidgetPreferences;
 import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.saveWidgetPreferences;
 
-public class BluetoothCommandWidget extends AppWidgetProvider
-{
+public class BluetoothCommandWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId)
-    {
+                                int appWidgetId) {
         BluetoothWidgetData widgetData = getWidgetPreferences(context, appWidgetId);
         // Construct the RemoteViews object
-        if (widgetData != null)
-        {
+        if (widgetData != null) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bluetooth_command_widget);
             views.setTextViewText(R.id.appwidget_text, widgetData.getWidgetTitle());
             int color = widgetData.getState() == BluetoothWidgetData.STATE_CONNECTED ? R.color.colorGreen : R.color.colorBlack;
@@ -32,42 +29,33 @@ public class BluetoothCommandWidget extends AppWidgetProvider
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
-    {
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds)
-        {
+        for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds)
-    {
+    public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
-        for (int appWidgetId : appWidgetIds)
-        {
+        for (int appWidgetId : appWidgetIds) {
             deleteWidgetPreferences(context, appWidgetId);
         }
     }
 
     @Override
-    public void onRestored(Context context, int[] oldWidgetIds, int[] newWidgetIds)
-    {
-        for (int i = 0; i < oldWidgetIds.length; i++)
-        {
-            if (newWidgetIds.length > i)
-            {
+    public void onRestored(Context context, int[] oldWidgetIds, int[] newWidgetIds) {
+        for (int i = 0; i < oldWidgetIds.length; i++) {
+            if (newWidgetIds.length > i) {
                 BluetoothWidgetData widgetPreferences = getWidgetPreferences(context, oldWidgetIds[i]);
                 deleteWidgetPreferences(context, oldWidgetIds[i]);
-                if (widgetPreferences != null)
-                {
+                if (widgetPreferences != null) {
                     widgetPreferences.setId(newWidgetIds[i]);
                     saveWidgetPreferences(context, widgetPreferences);
                 }
             }
-            else
-            {
+            else {
                 deleteWidgetPreferences(context, oldWidgetIds[i]);
             }
         }

@@ -13,19 +13,20 @@ import androidx.slice.SliceManager;
 
 import java.util.List;
 
-public class TerbApplication extends Application
-{
+import io.realm.Realm;
+
+public class TerbApplication extends Application {
     private static final String SLICE_AUTHORITY = "com.axotsoft.terb.slice";
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
+        Realm.init(this);
         grantSlicePermissions();
+
     }
 
-    private void grantSlicePermissions()
-    {
+    private void grantSlicePermissions() {
         Context context = getApplicationContext();
         Uri sliceProviderUri =
                 new Uri.Builder()
@@ -34,21 +35,18 @@ public class TerbApplication extends Application
                         .build();
 
         String assistantPackage = getAssistantPackage(context);
-        if (assistantPackage == null)
-        {
+        if (assistantPackage == null) {
             return;
         }
         SliceManager.getInstance(context)
                 .grantSlicePermission(assistantPackage, sliceProviderUri);
     }
 
-    private String getAssistantPackage(Context context)
-    {
+    private String getAssistantPackage(Context context) {
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> resolveInfoList = packageManager.queryIntentServices(
                 new Intent(VoiceInteractionService.SERVICE_INTERFACE), 0);
-        if (resolveInfoList.isEmpty())
-        {
+        if (resolveInfoList.isEmpty()) {
             return null;
         }
         return resolveInfoList.get(0).serviceInfo.packageName;

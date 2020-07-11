@@ -6,8 +6,7 @@ import android.os.SystemClock;
 import com.axotsoft.terb.bluetooth.AbstractBluetoothCallbackHandler;
 import com.axotsoft.terb.bluetooth.BluetoothConnectionHelper;
 
-public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHandler
-{
+public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHandler {
     private Context context;
     private BluetoothWidgetData widgetData;
     private long disconnectTime = -1;
@@ -17,8 +16,7 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
 
     private final Object sync = new Object();
 
-    protected BluetoothCommandWidgetHandler(Context context, BluetoothWidgetData widgetData, Runnable preOnDisconnect)
-    {
+    protected BluetoothCommandWidgetHandler(Context context, BluetoothWidgetData widgetData, Runnable preOnDisconnect) {
         super(null);
         this.context = context;
         this.widgetData = widgetData;
@@ -26,45 +24,36 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
         connected = false;
     }
 
-    public void addRunnable(Runnable runnable)
-    {
-        synchronized (sync)
-        {
-            if (widgetData != null)
-            {
+    public void addRunnable(Runnable runnable) {
+        synchronized (sync) {
+            if (widgetData != null) {
                 Runnable oldRunnable = onDisconnect;
                 this.onDisconnect = () ->
                 {
-                    if (oldRunnable != null)
-                    {
+                    if (oldRunnable != null) {
                         oldRunnable.run();
                     }
                     runnable.run();
                 };
             }
-            else
-            {
+            else {
                 runnable.run();
             }
         }
     }
 
     @Override
-    protected void onError(Exception e)
-    {
+    protected void onError(Exception e) {
 
     }
 
     @Override
-    protected void onDisconnect()
-    {
-        if (helper != null)
-        {
+    protected void onDisconnect() {
+        if (helper != null) {
             helper.unbind();
             BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_IDLE);
             this.preOnDisconnect.run();
-            synchronized (sync)
-            {
+            synchronized (sync) {
                 this.onDisconnect.run();
                 widgetData = null;
             }
@@ -74,20 +63,16 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
     }
 
     @Override
-    protected void processMessage(String msg)
-    {
+    protected void processMessage(String msg) {
         updateDisconnectTime();
     }
 
-    private void updateDisconnectTime()
-    {
+    private void updateDisconnectTime() {
         disconnectTime = SystemClock.uptimeMillis() + 15000;
         postAtTime(() ->
         {
-            if (SystemClock.uptimeMillis() >= disconnectTime)
-            {
-                if (helper != null)
-                {
+            if (SystemClock.uptimeMillis() >= disconnectTime) {
+                if (helper != null) {
                     helper.disconnect();
                 }
                 connected = false;
@@ -96,27 +81,22 @@ public class BluetoothCommandWidgetHandler extends AbstractBluetoothCallbackHand
     }
 
     @Override
-    protected void onConnect()
-    {
+    protected void onConnect() {
         BluetoothCommandWidgetUtils.switchWidgetState(context, widgetData.getWidgetId(), BluetoothWidgetData.STATE_CONNECTED);
         connected = true;
         updateDisconnectTime();
         postAtTime(() ->
-                helper.sendMessage(widgetData.getCommand(), widgetData.getLineEnding()), SystemClock.uptimeMillis() + 1000);
+                helper.sendMessage(widgetData.getCommand(), widgetData.getLineEnding()), SystemClock.uptimeMillis() + 100);
     }
 
-    public void trySendMessage()
-    {
-        if (!connected)
-        {
-            if (this.helper == null)
-            {
+    public void trySendMessage() {
+        if (!connected) {
+            if (this.helper == null) {
                 this.helper = new BluetoothConnectionHelper(context);
                 helper.connect(widgetData.getMacAddress(), this);
             }
         }
-        else
-        {
+        else {
             helper.sendMessage(widgetData.getCommand(), widgetData.getLineEnding());
             updateDisconnectTime();
         }

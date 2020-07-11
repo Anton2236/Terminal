@@ -3,40 +3,35 @@ package com.axotsoft.terb.bluetooth;
 import android.os.Handler;
 import android.os.Message;
 
-import static com.axotsoft.terb.bluetooth.BluetoothConnectionHandler.*;
+import static com.axotsoft.terb.bluetooth.BluetoothConnectionHandler.STATUS_CONNECTED;
+import static com.axotsoft.terb.bluetooth.BluetoothConnectionHandler.STATUS_DISCONNECTED;
+import static com.axotsoft.terb.bluetooth.BluetoothConnectionHandler.STATUS_ERROR;
+import static com.axotsoft.terb.bluetooth.BluetoothConnectionHandler.STATUS_OK;
 
-public abstract class AbstractBluetoothCallbackHandler extends Handler
-{
+public abstract class AbstractBluetoothCallbackHandler extends Handler {
     protected BluetoothConnectionHelper helper;
 
-    protected AbstractBluetoothCallbackHandler(BluetoothConnectionHelper helper)
-    {
+    protected AbstractBluetoothCallbackHandler(BluetoothConnectionHelper helper) {
         this.helper = helper;
     }
 
     @Override
-    public void handleMessage(Message msg)
-    {
+    public void handleMessage(Message msg) {
         int status = msg.arg1;
-        switch (status)
-        {
-            case STATUS_OK:
-            {
+        switch (status) {
+            case STATUS_OK: {
                 processMessage((String) msg.obj);
                 break;
             }
-            case STATUS_CONNECTED:
-            {
+            case STATUS_CONNECTED: {
                 onConnect();
                 break;
             }
-            case STATUS_DISCONNECTED:
-            {
+            case STATUS_DISCONNECTED: {
                 onDisconnect();
                 break;
             }
-            case STATUS_ERROR:
-            {
+            case STATUS_ERROR: {
                 onError((Exception) msg.obj);
                 break;
             }

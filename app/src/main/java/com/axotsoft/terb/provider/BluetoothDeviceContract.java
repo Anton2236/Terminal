@@ -5,8 +5,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 
-public final class BluetoothDeviceContract
-{
+public final class BluetoothDeviceContract {
 
     public static final String CONTENT_AUTHORITY = "com.axotsoft.terb.authority";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -18,8 +17,7 @@ public final class BluetoothDeviceContract
     public static final String CONTENT_MESSAGE_TYPE = "com.axotsoft.bluetooth.message";
     public static final String CONTENT_MESSAGES_TYPE = "com.axotsoft.bluetooth.messages";
 
-    public static class DeviceEntry implements BaseColumns
-    {
+    public static class DeviceEntry implements BaseColumns {
         public static final String TABLE_NAME = "devices";
 
         public static final String _COMMANDS = "commands";
@@ -40,15 +38,13 @@ public final class BluetoothDeviceContract
                 };
 
 
-        public static Uri buildUri(long id)
-        {
+        public static Uri buildUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
 
         }
     }
 
-    public static final class MessageEntry implements BaseColumns
-    {
+    public static final class MessageEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "messages";
 
@@ -68,8 +64,7 @@ public final class BluetoothDeviceContract
                         _FROM_DEVICE
                 };
 
-        public static Uri buildUri(long id)
-        {
+        public static Uri buildUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
 
         }

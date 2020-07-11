@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
 
-public class BluetoothDevicesSQLiteHelper extends SQLiteOpenHelper
-
-{
+public class BluetoothDevicesSQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "axotsoft_bluetooth_devices_db";
     private static final int VERSION = 1;
 
@@ -33,21 +31,18 @@ public class BluetoothDevicesSQLiteHelper extends SQLiteOpenHelper
                     + " );";
 
 
-    BluetoothDevicesSQLiteHelper(Context context)
-    {
+    BluetoothDevicesSQLiteHelper(Context context) {
         super(context, context.getCacheDir() + File.separator + DATABASE_NAME, null, VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db)
-    {
+    public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_DEVICES_TABLE);
         db.execSQL(SQL_CREATE_MESSAGES_TABLE);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + BluetoothDeviceContract.DeviceEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + BluetoothDeviceContract.MessageEntry.TABLE_NAME);
         onCreate(db);

@@ -4,7 +4,6 @@ import com.axotsoft.terb.provider.BluetoothMessageRecord;
 
 import java.util.List;
 
-public interface MessagesConsumer
-{
+public interface MessagesConsumer {
     void accept(List<BluetoothMessageRecord> messageRecords);
 }

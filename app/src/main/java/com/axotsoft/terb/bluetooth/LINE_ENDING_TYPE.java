@@ -4,8 +4,7 @@ import androidx.annotation.StringRes;
 
 import com.axotsoft.terb.R;
 
-public enum LINE_ENDING_TYPE
-{
+public enum LINE_ENDING_TYPE {
     NONE(0, "", R.string.empty_line_ending), CR(1, "\n", R.string.cr), LF(2, "\r", R.string.lf), CRLF(3, "\n\r", R.string.crlf);
     private int key;
     private String ending;
@@ -13,30 +12,24 @@ public enum LINE_ENDING_TYPE
     int text;
 
 
-    LINE_ENDING_TYPE(int key, String ending, int text)
-    {
+    LINE_ENDING_TYPE(int key, String ending, int text) {
         this.key = key;
         this.ending = ending;
         this.text = text;
     }
 
-    public int getKey()
-    {
+    public int getKey() {
         return key;
     }
 
-    public String getEnding()
-    {
+    public String getEnding() {
         return ending;
     }
 
-    public static LINE_ENDING_TYPE valueOf(int key)
-    {
+    public static LINE_ENDING_TYPE valueOf(int key) {
         LINE_ENDING_TYPE stringEndingType = NONE;
-        for (LINE_ENDING_TYPE type : LINE_ENDING_TYPE.values())
-        {
-            if (type.getKey() == key)
-            {
+        for (LINE_ENDING_TYPE type : LINE_ENDING_TYPE.values()) {
+            if (type.getKey() == key) {
                 stringEndingType = type;
                 break;
             }
@@ -44,10 +37,8 @@ public enum LINE_ENDING_TYPE
         return stringEndingType;
     }
 
-    public LINE_ENDING_TYPE getNext()
-    {
-        switch (this)
-        {
+    public LINE_ENDING_TYPE getNext() {
+        switch (this) {
             case CRLF:
                 return NONE;
             case NONE:
@@ -61,8 +52,7 @@ public enum LINE_ENDING_TYPE
     }
 
     public @StringRes
-    int getText()
-    {
+    int getText() {
         return text;
     }
 }
