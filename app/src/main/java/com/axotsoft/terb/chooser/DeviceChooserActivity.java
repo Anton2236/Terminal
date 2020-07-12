@@ -95,7 +95,11 @@ public class DeviceChooserActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_TO_START_DISCOVERY) {
-
+            if (permissions.length > 0 && Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[0])) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    BluetoothAdapter.getDefaultAdapter().startDiscovery();
+                }
+            }
         }
     }
 }
