@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
-import com.axotsoft.terb.activity.AbstractDeviceChooserClientActivity;
+import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.terb.provider.BluetoothDeviceRecord;
 import com.axotsoft.terb.utils.UiUtils;
@@ -22,7 +22,7 @@ import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.saveWidgetPre
 /**
  * The configuration screen for the {@link BluetoothCommandWidget BluetoothCommandWidget} AppWidget.
  */
-public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceChooserClientActivity {
+public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceClientActivity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private EditText appWidgetTitleText;
     private EditText appWidgetCommandText;

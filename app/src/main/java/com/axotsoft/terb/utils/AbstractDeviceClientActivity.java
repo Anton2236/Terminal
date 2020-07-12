@@ -1,4 +1,4 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.utils;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -7,14 +7,15 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.axotsoft.terb.R;
+import com.axotsoft.terb.chooser.DeviceChooserActivity;
 import com.axotsoft.terb.provider.BluetoothDeviceRecord;
 import com.axotsoft.terb.provider.BluetoothDevicesDao;
 import com.axotsoft.terb.utils.UiUtils;
 
-public abstract class AbstractDeviceChooserClientActivity extends AppCompatActivity {
+public abstract class AbstractDeviceClientActivity extends AppCompatActivity {
 
     protected BluetoothDeviceRecord deviceRecord;
-    BluetoothDevicesDao devicesDao;
+    protected BluetoothDevicesDao devicesDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

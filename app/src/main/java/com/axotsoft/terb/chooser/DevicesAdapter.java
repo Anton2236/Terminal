@@ -1,4 +1,4 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.chooser;
 
 import android.view.LayoutInflater;
 import android.view.View;

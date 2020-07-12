@@ -1,19 +1,20 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.chooser;
 
 import android.bluetooth.BluetoothDevice;
 
 import java.util.Objects;
 
 public class DeviceData {
+
+    private final String address;
     private String name;
-    private String address;
     private boolean bonded;
     private boolean saved;
     private BluetoothDevice device;
 
-    public DeviceData(String name, String address, boolean saved, boolean bonded) {
-        this.name = name;
+    public DeviceData(String address, String name, boolean saved, boolean bonded) {
         this.address = address;
+        this.name = name;
         this.saved = saved;
         this.bonded = bonded;
     }
@@ -22,6 +23,9 @@ public class DeviceData {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAddress() {
         return address;

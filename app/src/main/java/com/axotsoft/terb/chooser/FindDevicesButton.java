@@ -1,4 +1,4 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.chooser;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;

@@ -15,13 +15,14 @@ import com.axotsoft.terb.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.terb.devices.BluetoothMessagesManager;
 import com.axotsoft.terb.provider.BluetoothDeviceRecord;
 import com.axotsoft.terb.provider.BluetoothMessageRecord;
+import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.widget.CommandsAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AbstractDeviceChooserClientActivity {
+public class MainActivity extends AbstractDeviceClientActivity {
     private static final String DEVICE_ID = "device_id";
     private AbstractBluetoothCallbackHandler handler;
     private BluetoothConnectionHelper helper;

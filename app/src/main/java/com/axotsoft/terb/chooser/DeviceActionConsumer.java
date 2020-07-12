@@ -1,4 +1,4 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.chooser;
 
 public interface DeviceActionConsumer {
     void accept(DeviceData deviceData);

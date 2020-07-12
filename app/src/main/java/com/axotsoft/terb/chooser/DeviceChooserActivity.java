@@ -1,4 +1,4 @@
-package com.axotsoft.terb.activity;
+package com.axotsoft.terb.chooser;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
-import com.axotsoft.terb.devices.BluetoothDevicesManager;
 import com.axotsoft.terb.utils.ContextAdapter;
 
 public class DeviceChooserActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.axotsoft.terb.devices;
+package com.axotsoft.terb.chooser;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.axotsoft.terb.activity.DeviceData;
-import com.axotsoft.terb.activity.DevicesAdapter;
 import com.axotsoft.terb.bluetooth.LINE_ENDING_TYPE;
 import com.axotsoft.terb.provider.BluetoothDeviceContract;
 import com.axotsoft.terb.provider.BluetoothDeviceRecord;
@@ -104,12 +102,25 @@ public class BluetoothDevicesManager {
     private void onDeviceFound(Context context, Intent intent) {
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if (device != null) {
-            DeviceData data = new DeviceData(device.getName(), device.getAddress(), false, false);
+            DeviceData data = new DeviceData(device.getAddress(), device.getName(), false, false);
             data.setDevice(device);
-            if (devicesMap.get(data.getAddress()) == null) {
+            DeviceData storedData = devicesMap.get(data.getAddress());
+            if (storedData == null) {
                 devices.add(data);
                 devicesMap.put(data.getAddress(), data);
                 devicesAdapter.notifyItemInserted(devices.size() - 1);
+            }
+            else {
+                storedData.setName(device.getName());
+                storedData.setDevice(device);
+                devicesAdapter.notifyItemChanged(devices.indexOf(storedData));
+                if (storedData.isSaved()) {
+                    BluetoothDeviceRecord deviceRecord = devicesDao.getDeviceByMacAddress(storedData.getAddress());
+                    if (deviceRecord != null) {
+                        deviceRecord.setDeviceName(device.getName());
+                        devicesDao.updateDevice(deviceRecord);
+                    }
+                }
             }
         }
     }
@@ -124,7 +135,7 @@ public class BluetoothDevicesManager {
         List<BluetoothDeviceRecord> records = devicesDao.getAllDevices();
 
         for (BluetoothDeviceRecord record : records) {
-            DeviceData data = new DeviceData(record.getDeviceName(), record.getMacAddress(), true, true);
+            DeviceData data = new DeviceData(record.getMacAddress(), record.getDeviceName(), true, true);
             if (devicesMap.get(data.getAddress()) == null) {
                 devicesMap.put(data.getAddress(), data);
                 devices.add(data);
@@ -134,7 +145,7 @@ public class BluetoothDevicesManager {
         if (adapter.getState() == BluetoothAdapter.STATE_ON) {
             Set<BluetoothDevice> bondedDevices = adapter.getBondedDevices();
             for (BluetoothDevice device : bondedDevices) {
-                DeviceData data = new DeviceData(device.getName(), device.getAddress(), false, true);
+                DeviceData data = new DeviceData(device.getAddress(), device.getName(), false, true);
                 data.setDevice(device);
                 if (devicesMap.get(data.getAddress()) == null) {
                     devicesMap.put(data.getAddress(), data);
