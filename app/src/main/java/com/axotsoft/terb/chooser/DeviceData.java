@@ -54,18 +54,4 @@ public class DeviceData {
     public void setSaved(boolean saved) {
         this.saved = saved;
     }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DeviceData that = (DeviceData) o;
-        return Objects.equals(address, that.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(address);
-    }
 }

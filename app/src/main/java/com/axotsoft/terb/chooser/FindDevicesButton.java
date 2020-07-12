@@ -45,19 +45,4 @@ public class FindDevicesButton {
             button.setText(context.getText(R.string.enable_bluetooth));
         }
     }
-
-    public void onClick(View v) {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter.isEnabled()) {
-            if (adapter.isDiscovering()) {
-                adapter.cancelDiscovery();
-            }
-            else {
-                adapter.startDiscovery();
-            }
-        }
-        else {
-            contextAdapter.getContext().startActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
-        }
-    }
 }

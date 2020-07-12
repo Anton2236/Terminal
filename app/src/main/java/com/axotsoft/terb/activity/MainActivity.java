@@ -249,7 +249,7 @@ public class MainActivity extends AbstractDeviceClientActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        helper.unregisterReceivers();
+        helper.unregisterStateChangedReceiver();
     }
 
     private static class BluetoothCallbackHandler extends AbstractBluetoothCallbackHandler {

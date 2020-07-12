@@ -19,7 +19,7 @@
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
             app:layout_constraintBottom_toTopOf="@id/device_address"
-            app:layout_constraintEnd_toStartOf="@id/bind_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,14 +27,14 @@
 
         <TextView
             android:id="@+id/device_address"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/bind_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_name"
@@ -42,17 +42,17 @@
 
         <TextView
             android:id="@+id/bind_button"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/plus_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/simple_button_selector"
             android:gravity="center"
             android:text="@string/pair"
-            android:textColor="@color/colorWhite"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/colorLightBlue"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/device_address"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/device_name"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/device_address"
+            app:layout_constraintTop_toTopOf="@id/device_address" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

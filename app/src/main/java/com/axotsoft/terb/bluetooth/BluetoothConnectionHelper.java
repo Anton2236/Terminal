@@ -100,7 +100,7 @@ public class BluetoothConnectionHelper {
         }
     }
 
-    public void unregisterReceivers() {
+    public void unregisterStateChangedReceiver() {
         if (stateChangedReceiver != null) {
             context.unregisterReceiver(stateChangedReceiver);
             stateChangedReceiver = null;
@@ -119,11 +119,7 @@ public class BluetoothConnectionHelper {
             int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
             if (state == BluetoothAdapter.STATE_ON) {
                 runnable.run();
-                if (stateChangedReceiver != null) {
-                    context.unregisterReceiver(stateChangedReceiver);
-                    stateChangedReceiver = null;
-                }
-
+                unregisterStateChangedReceiver();
             }
         }
     }

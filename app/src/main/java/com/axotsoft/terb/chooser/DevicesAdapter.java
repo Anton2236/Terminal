@@ -14,11 +14,13 @@ import java.util.List;
 
 public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHolder> {
     public static final int DEVICE_NAME_MAX_LENGTH = 20;
-    private DeviceActionConsumer deviceActionConsumer;
+    private DeviceActionConsumer onDeviceClick;
+    private DeviceActionConsumer onPairClick;
     private List<DeviceData> devices;
 
-    public DevicesAdapter(DeviceActionConsumer deviceActionConsumer, List<DeviceData> devices) {
-        this.deviceActionConsumer = deviceActionConsumer;
+    public DevicesAdapter(DeviceActionConsumer onDeviceClick, DeviceActionConsumer onPairClick, List<DeviceData> devices) {
+        this.onDeviceClick = onDeviceClick;
+        this.onPairClick = onPairClick;
         this.devices = devices;
     }
 
@@ -53,27 +55,19 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
             container = itemView.findViewById(R.id.device_button);
             deviceNameText = itemView.findViewById(R.id.device_name);
             deviceAddressText = itemView.findViewById(R.id.device_address);
+            container.setOnClickListener(this::onDeviceClick);
+            bindView.setOnClickListener(this::onPairClick);
         }
 
         public void setData(DeviceData deviceData) {
             this.data = deviceData;
+
             if (data.isBonded()) {
-                container.setOnClickListener(this::onClick);
                 bindView.setVisibility(View.GONE);
             }
             else {
-                container.setOnClickListener(null);
-                bindView.setOnClickListener(this::onClick);
                 bindView.setVisibility(View.VISIBLE);
             }
-
-            if (data.isSaved()) {
-                container.setBackgroundResource(R.drawable.simple_button_selector);
-            }
-            else {
-                container.setBackgroundResource(R.drawable.simple_button_inactive);
-            }
-
             String deviceName = deviceData.getName();
             if (deviceName != null && deviceName.length() > DEVICE_NAME_MAX_LENGTH) {
                 deviceName = deviceName.substring(0, DEVICE_NAME_MAX_LENGTH) + "...";
@@ -82,9 +76,15 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
             deviceAddressText.setText(deviceData.getAddress());
         }
 
-        public void onClick(View v) {
-            if (deviceActionConsumer != null) {
-                deviceActionConsumer.accept(data);
+        public void onDeviceClick(View v) {
+            if (onDeviceClick != null) {
+                onDeviceClick.accept(data);
+            }
+        }
+
+        public void onPairClick(View v) {
+            if (onPairClick != null) {
+                onPairClick.accept(data);
             }
         }
     }

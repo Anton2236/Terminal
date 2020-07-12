@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/simple_button_selector"
         android:gravity="center"
-        android:onClick="onDiscoverClick"
+        android:onClick="onFindClick"
         android:padding="10dp"
         android:text="@string/find_devices"
         android:textColor="@color/colorWhite"
