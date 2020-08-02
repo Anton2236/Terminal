@@ -1,6 +1,5 @@
 package com.axotsoft.terb.patterns;
 
-import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.LayoutRes;
@@ -37,11 +36,7 @@ public class PatternsManager {
             patternsAdapter.setLayout(layoutId);
             this.patternsView.setAdapter(patternsAdapter);
 
-            if (patterns.isEmpty()) {
-                patternsView.setVisibility(View.GONE);
-            }
-            else {
-                patternsView.setVisibility(View.VISIBLE);
+            if (!patterns.isEmpty()) {
                 patternsView.scrollToPosition(patterns.size() - 1);
             }
         }
@@ -79,7 +74,6 @@ public class PatternsManager {
             DeviceRecord deviceRecord = database.getDevice(deviceAddress);
             deviceRecord.getPatterns().add(record);
         }, () -> {
-            patternsView.setVisibility(View.VISIBLE);
             patternsView.scrollToPosition(deviceRecord.getPatterns().size() - 1);
         });
     }
@@ -88,7 +82,6 @@ public class PatternsManager {
         database.execute(realm -> {
             pattern.deleteFromRealm();
         });
-        patternsView.setVisibility(deviceRecord.getPatterns().isEmpty() ? View.GONE : View.VISIBLE);
         patternsView.scrollToPosition(deviceRecord.getPatterns().size() - 1);
 
     }

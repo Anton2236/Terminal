@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="5dp"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/command_text"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="5"
+        android:background="@drawable/simple_edit_text_selector"
+        android:gravity="center"
+        android:hint="@string/enter_command"
+        android:inputType="text"
+        android:padding="5dp"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorGrayText"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/delay"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="2"
+        android:background="@drawable/simple_edit_text_selector"
+        android:gravity="center"
+        android:hint="@string/enter_delay"
+        android:inputType="time"
+        android:minWidth="100dp"
+        android:padding="5dp"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorGrayText"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/initial_delay_label"
+        app:layout_goneMarginEnd="5dp" />
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/clear_selector"
+        android:src="@drawable/clear_image" />
+</LinearLayout>

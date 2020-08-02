@@ -9,6 +9,7 @@
     <color name="colorGrayText">#bdbdbd</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorRed">#aa1111</color>
+    <color name="colorLightRed">#ff1111</color>
     <color name="colorGreen">#11bb11</color>
     <color name="colorDark">#181818</color>
 </resources>

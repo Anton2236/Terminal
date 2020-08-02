@@ -111,7 +111,7 @@
             android:layout_gravity="center"
             android:layout_weight="1.8"
             android:background="@drawable/simple_button_selector"
-            android:text="@string/add_widget"
+            android:text="@string/add"
             android:onClick="onAddButtonClick"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"

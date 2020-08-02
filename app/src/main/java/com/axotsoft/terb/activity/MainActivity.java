@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
@@ -16,8 +17,8 @@ import com.axotsoft.terb.bluetooth.ConnectionRecord;
 import com.axotsoft.terb.devices.DeviceRecord;
 import com.axotsoft.terb.messages.MessageRecord;
 import com.axotsoft.terb.messages.MessagesAdapter;
-import com.axotsoft.terb.patterns.records.PatternRecord;
 import com.axotsoft.terb.patterns.PatternsManager;
+import com.axotsoft.terb.patterns.records.PatternRecord;
 import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.utils.ContextAdapter;
 import com.axotsoft.terb.utils.LineEndingEditor;
@@ -209,5 +210,11 @@ public class MainActivity extends AbstractDeviceClientActivity {
         String command = patternsManager.getEnteredCommand();
         PatternRecord patternRecord = patternsManager.createSingletonPattern(command);
         patternsManager.addPattern(patternRecord);
+    }
+
+    public void onCreatePatternClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PatternForgeDialog forgeDialog = new PatternForgeDialog(patternsManager);
+        forgeDialog.show(fragmentManager, PatternForgeDialog.TAG);
     }
 }

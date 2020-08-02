@@ -28,133 +28,129 @@
         android:id="@+id/device_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/device_name"
         app:layout_constraintVertical_weight="10">
 
+        <TextView
+            android:id="@+id/device_action"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:padding="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/connect"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@id/line_ending_chooser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/line_ending_chooser"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:text="@string/empty_line_ending"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/device_action"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/device_action" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/simple_button_idle"
             android:padding="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/commands_container"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/device_action" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/commands_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/simple_button_idle"
-            android:backgroundTint="@color/colorBlack"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/command_container" />
+            app:layout_constraintBottom_toTopOf="@+id/command_text"
+            app:layout_constraintEnd_toEndOf="@id/command_text"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/command_container"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/create_pattern_button"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@id/buttonPanel">
-
-            <EditText
-                android:id="@+id/command_text"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/simple_edit_text_selector"
-                android:gravity="center"
-                android:hint="@string/enter_command"
-                android:inputType="text"
-                android:padding="5dp"
-                android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorGrayText"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/line_ending_chooser"
-                app:layout_constraintHorizontal_weight="5"
-                app:layout_constraintStart_toStartOf="parent" />
+            android:background="@drawable/plus_selector"
+            android:gravity="center"
+            android:onClick="onCreatePatternClick"
+            android:padding="8dp"
+            android:src="@drawable/plus_image"
+            app:layout_constraintBottom_toBottomOf="@id/commands_container"
+            app:layout_constraintEnd_toEndOf="@id/line_ending_chooser" />
 
 
-            <TextView
-                android:id="@+id/line_ending_chooser"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/simple_button_selector"
-                android:gravity="center"
-                android:text="@string/empty_line_ending"
-                android:textAlignment="center"
-                android:textColor="@color/colorWhite"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/command_text" />
+        <TextView
+            android:id="@+id/add_command_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:onClick="addCommand"
+            android:text="@string/save"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/command_text"
+            app:layout_constraintEnd_toStartOf="@id/command_text"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/command_text"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/simple_edit_text_selector"
+            android:gravity="center"
+            android:hint="@string/enter_command"
+            android:inputType="text"
+            android:padding="5dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorGrayText"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_button"
+            app:layout_constraintStart_toEndOf="@id/add_command_button" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonPanel"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+        <TextView
+            android:id="@+id/send_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:onClick="sendButtonClick"
+            android:text="@string/send"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/command_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/command_text" />
 
-            <TextView
-                android:id="@+id/add_command_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="6dp"
-                android:background="@drawable/simple_button_selector"
-                android:gravity="center"
-                android:onClick="addCommand"
-                android:text="@string/save"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@id/device_action"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/device_action"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/simple_button_selector"
-                android:gravity="center"
-                android:padding="10dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/connect"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@id/send_button"
-                app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintStart_toEndOf="@id/add_command_button" />
-
-            <TextView
-                android:id="@+id/send_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="6dp"
-                android:background="@drawable/simple_button_selector"
-                android:gravity="center"
-                android:onClick="sendButtonClick"
-                android:text="@string/send"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@id/device_action" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

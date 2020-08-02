@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDark">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="400dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/create_pattern"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/pattern_name"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/simple_edit_text_selector"
+                android:gravity="center"
+                android:hint="@string/enter_pattern_name"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorGrayText"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <TextView
+                android:id="@+id/initial_delay_label"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/initial_delay"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pattern_name" />
+
+            <EditText
+                android:id="@+id/initial_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/simple_edit_text_selector"
+                android:gravity="center"
+                android:hint="@string/enter_delay"
+                android:inputType="time"
+                android:minWidth="100dp"
+                android:padding="5dp"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorGrayText"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/initial_delay_label"
+                app:layout_goneMarginEnd="5dp" />
+
+            <TextView
+                android:id="@+id/disconnect_label"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/disconnect_after_commands"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/initial_delay_label" />
+
+            <CheckBox
+                android:id="@+id/disconnect_check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintEnd_toEndOf="@id/pattern_name"
+                app:layout_constraintTop_toTopOf="@id/disconnect_label" />
+
+            <TextView
+                android:id="@+id/commands_label"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/commands"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/disconnect_label" />
+
+            <LinearLayout
+                android:id="@+id/commands_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/commands_label">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/command_text"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="5"
+                        android:background="@drawable/simple_edit_text_selector"
+                        android:gravity="center"
+                        android:hint="@string/enter_command"
+                        android:inputType="text"
+                        android:padding="5dp"
+                        android:textColor="@color/colorWhite"
+                        android:textColorHint="@color/colorGrayText"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/delay"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/simple_edit_text_selector"
+                        android:gravity="center"
+                        android:hint="@string/enter_delay"
+                        android:inputType="time"
+                        android:minWidth="100dp"
+                        android:padding="5dp"
+                        android:textColor="@color/colorWhite"
+                        android:textColorHint="@color/colorGrayText"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/initial_delay_label"
+                        app:layout_goneMarginEnd="5dp" />
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/clear_selector"
+                        android:src="@drawable/clear_image" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/add_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/simple_button_selector"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/plus_image"
+                android:text="@string/add"
+                android:textColor="@color/colorWhite"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/commands_container" />
+
+            <TextView
+                android:id="@+id/create_pattern_button"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/simple_button_selector"
+                android:gravity="center"
+                android:text="@string/create_pattern"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_button" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</FrameLayout>
