@@ -17,6 +17,7 @@ import com.axotsoft.terb.R;
 import com.axotsoft.terb.activity.PatternForgeDialog;
 import com.axotsoft.terb.devices.DeviceRecord;
 import com.axotsoft.terb.patterns.PatternsManager;
+import com.axotsoft.terb.patterns.records.CommandRecord;
 import com.axotsoft.terb.patterns.records.PatternRecord;
 import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.utils.LineEndingEditor;
@@ -46,6 +47,11 @@ public class CommandWidgetConfigureActivity extends AbstractDeviceClientActivity
                     return;
                 }
                 selectedPattern = patternsManager.createSingletonPattern(commandText);
+                selectedPattern.setDisconnectAfterCommands(true);
+                CommandRecord commandRecord = selectedPattern.getCommands().first();
+                if (commandRecord != null) {
+                    commandRecord.setDelay(15000);
+                }
             }
             String widgetTitleText = appWidgetTitleText.getText().toString();
 
