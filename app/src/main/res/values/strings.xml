@@ -31,5 +31,11 @@
     <string name="initial_delay">Initial delay:</string>
     <string name="disconnect_after_commands">Disconnect after commands:</string>
     <string name="commands">Commands:</string>
-    <string name="enter_delay">Enter delay</string>
+    <string name="enter_delay">Enter delay (s)</string>
+    <string name="enter_pattern_name_toast">Enter pattern name!</string>
+    <string name="invalid_initial_delay_toast">Initial delay should be between 0 an 60 seconds!</string>
+    <string name="add_command_toast">Add some command!</string>
+    <string name="enter_command_text_toast">Command should not be empty!</string>
+    <string name="invalid_delay_toast">Delay should be between 0 an 60 seconds!</string>
+    <string name="unsent">Unsent</string>
 </resources>

@@ -10,12 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
+import com.axotsoft.terb.activity.PatternForgeDialog;
 import com.axotsoft.terb.devices.DeviceRecord;
-import com.axotsoft.terb.patterns.records.PatternRecord;
 import com.axotsoft.terb.patterns.PatternsManager;
+import com.axotsoft.terb.patterns.records.PatternRecord;
 import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.utils.LineEndingEditor;
 import com.axotsoft.terb.utils.UiUtils;
@@ -140,6 +142,12 @@ public class CommandWidgetConfigureActivity extends AbstractDeviceClientActivity
 
     public void onChooseDeviceButtonClick(View v) {
         startChoosingActivity();
+    }
+
+    public void onCreatePatternClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PatternForgeDialog forgeDialog = new PatternForgeDialog(patternsManager::addPattern);
+        forgeDialog.show(fragmentManager, PatternForgeDialog.TAG);
     }
 }
 

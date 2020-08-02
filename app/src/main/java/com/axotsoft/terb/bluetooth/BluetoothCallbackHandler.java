@@ -92,7 +92,7 @@ public class BluetoothCallbackHandler extends Handler {
         database.executeAsync(realm -> {
             DeviceRecord deviceRecord = new Database(realm).getDevice(deviceAddress);
             List<MessageRecord> pendingMessages = getPendingMessages(deviceRecord);
-            pendingMessages.forEach(m -> m.setMessageType(MessageType.ERROR));
+            pendingMessages.forEach(m -> m.setMessageType(MessageType.UNSENT_MESSAGE));
         });
     }
 
@@ -110,12 +110,8 @@ public class BluetoothCallbackHandler extends Handler {
             pendingPatterns.add(pattern);
             return;
         }
-        long lastCommandTime = connectionRecord.getLastCommandTime();
-        long currentTimeMillis = System.currentTimeMillis();
+        long lastCommandTime = System.currentTimeMillis();
 
-        if (lastCommandTime < currentTimeMillis) {
-            lastCommandTime = currentTimeMillis;
-        }
 
         long initialDelay = pattern.getInitialDelay();
         if (initialDelay < PatternRecord.MINIMAL_DELAY) {
@@ -137,7 +133,9 @@ public class BluetoothCallbackHandler extends Handler {
 
         final long lastTime = lastCommandTime;
         database.execute(realm -> {
-            connectionRecord.setLastCommandTime(lastTime);
+            if (connectionRecord.getLastCommandTime() < lastTime) {
+                connectionRecord.setLastCommandTime(lastTime);
+            }
             if (pattern.isDisconnectAfterCommands()) {
                 connectionRecord.setShouldDisconnect(true);
             }

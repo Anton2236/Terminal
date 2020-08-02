@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +48,8 @@ public class MainActivity extends AbstractDeviceClientActivity {
     private RealmResults<MessageRecord> messageRecords;
     private OrderedRealmCollectionChangeListener<RealmResults<MessageRecord>> messagesListener = this::onMessageAdded;
 
+    private CountDownTimer disconnectTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +88,6 @@ public class MainActivity extends AbstractDeviceClientActivity {
                 this.deviceRecord = deviceRecord;
             }
         }
-
         updateMessagesView(deviceRecord);
         lineEndingEditor.updateDeviceRecord(deviceRecord);
         patternsManager.updateDeviceRecord(deviceRecord, this::sendPattern);
@@ -95,10 +97,12 @@ public class MainActivity extends AbstractDeviceClientActivity {
             deviceNameText.setText(deviceRecord.getDeviceName());
             deviceContainer.setVisibility(View.VISIBLE);
             updateConnectedState();
+            updateDisconnectTimer();
             editor.putString(PREFERENCE_DEVICE_ADDRESS, deviceRecord.getAddress());
             editor.apply();
         }
         else {
+            updateDisconnectTimer();
             deviceNameText.setText(R.string.select_device);
             deviceContainer.setVisibility(View.GONE);
             editor.putString(PREFERENCE_DEVICE_ADDRESS, "");
@@ -114,6 +118,7 @@ public class MainActivity extends AbstractDeviceClientActivity {
 
     private void onConnectionStateChanged(Context context, Intent intent) {
         updateConnectedState();
+        updateDisconnectTimer();
     }
 
     private void updateConnectedState() {
@@ -151,7 +156,22 @@ public class MainActivity extends AbstractDeviceClientActivity {
 
     private void onMessageAdded(RealmResults<MessageRecord> records, OrderedCollectionChangeSet orderedCollectionChangeSet) {
         messagesView.scrollToPosition(messageRecords.size() - 1);
+        updateDisconnectTimer();
     }
+
+    private void updateDisconnectTimer() {
+        if (disconnectTimer != null) {
+            disconnectTimer.cancel();
+            disconnectTimer = null;
+        }
+        ConnectionRecord connectionRecord = getConnectionRecord();
+        if (connectionRecord != null && connectionRecord.isConnected() && connectionRecord.isShouldDisconnect()) {
+            long timeLeft = connectionRecord.getLastCommandTime() - System.currentTimeMillis();
+            disconnectTimer = startDisconnectTimer(timeLeft);
+            disconnectTimer.start();
+        }
+    }
+
 
     private void clearMessageRecords() {
         if (messageRecords != null) {
@@ -214,7 +234,22 @@ public class MainActivity extends AbstractDeviceClientActivity {
 
     public void onCreatePatternClick(View view) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PatternForgeDialog forgeDialog = new PatternForgeDialog(patternsManager);
+        PatternForgeDialog forgeDialog = new PatternForgeDialog(patternsManager::addPattern);
         forgeDialog.show(fragmentManager, PatternForgeDialog.TAG);
+    }
+
+    private CountDownTimer startDisconnectTimer(long timeLeft) {
+        return new CountDownTimer(timeLeft, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String text = millisUntilFinished / 1000 + "s";
+                deviceActionText.setText(String.format("%s (%s)", getString(R.string.disconnect), text));
+            }
+
+            @Override
+            public void onFinish() {
+                deviceActionText.setText(R.string.disconnect);
+            }
+        };
     }
 }

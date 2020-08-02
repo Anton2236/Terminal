@@ -40,6 +40,7 @@
             android:gravity="center"
             android:hint="@string/enter_widget_title"
             android:inputType="text"
+            android:maxLength="7"
             android:padding="5dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
@@ -63,6 +64,7 @@
                 android:gravity="center"
                 android:hint="@string/enter_command"
                 android:inputType="text"
+                android:maxLength="40"
                 android:padding="5dp"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorGrayText"
@@ -79,7 +81,6 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/simple_button_selector"
                 android:gravity="center"
-                android:onClick="switchLineEnding"
                 android:text="@string/empty_line_ending"
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
@@ -90,19 +91,35 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <Button
+            android:id="@+id/create_pattern_button"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.8"
+            android:background="@drawable/simple_button_selector"
+            android:onClick="onCreatePatternClick"
+            android:text="@string/create_pattern"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/command_container" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/commands_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="15dp"
             android:layout_weight="6"
             android:background="@drawable/simple_button_idle"
             android:padding="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/add_button"
-            app:layout_constraintTop_toBottomOf="@id/command_container" />
+            app:layout_constraintTop_toBottomOf="@id/create_pattern_button" />
 
         <Button
             android:id="@+id/add_button"
@@ -111,8 +128,8 @@
             android:layout_gravity="center"
             android:layout_weight="1.8"
             android:background="@drawable/simple_button_selector"
-            android:text="@string/add"
             android:onClick="onAddButtonClick"
+            android:text="@string/add"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
