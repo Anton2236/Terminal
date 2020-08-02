@@ -87,6 +87,8 @@ public class PatternsManager {
     }
 
     public String getEnteredCommand() {
-        return commandEditText.getText().toString();
+        String command = commandEditText.getText().toString();
+        commandEditText.setText("");
+        return command;
     }
 }

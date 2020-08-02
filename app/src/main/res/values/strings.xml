@@ -38,4 +38,7 @@
     <string name="enter_command_text_toast">Command should not be empty!</string>
     <string name="invalid_delay_toast">Delay should be between 0 an 60 seconds!</string>
     <string name="unsent">Unsent</string>
+    <string name="OK">OK</string>
+    <string name="delete_messages_title">Delete messages?</string>
+    <string name="delete_messages_text">Are you sure you want to delete all messages for this device?</string>
 </resources>

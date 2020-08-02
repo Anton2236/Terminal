@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,9 +18,11 @@ import com.axotsoft.terb.bluetooth.BluetoothConnectionHelperService;
 import com.axotsoft.terb.bluetooth.ConnectionRecord;
 import com.axotsoft.terb.devices.DeviceRecord;
 import com.axotsoft.terb.messages.MessageRecord;
+import com.axotsoft.terb.messages.MessageType;
 import com.axotsoft.terb.messages.MessagesAdapter;
 import com.axotsoft.terb.patterns.PatternsManager;
 import com.axotsoft.terb.patterns.records.PatternRecord;
+import com.axotsoft.terb.realm.Database;
 import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
 import com.axotsoft.terb.utils.ContextAdapter;
 import com.axotsoft.terb.utils.LineEndingEditor;
@@ -66,6 +69,8 @@ public class MainActivity extends AbstractDeviceClientActivity {
         deviceActionText = findViewById(R.id.device_action);
         deviceContainer = findViewById(R.id.device_container);
         messagesView = findViewById(R.id.messages);
+        TextView textView = findViewById(R.id.add_command_button);
+        textView.setOnLongClickListener(this::deleteAllMessagesDialog);
     }
 
     private void initManagers() {
@@ -157,6 +162,30 @@ public class MainActivity extends AbstractDeviceClientActivity {
     private void onMessageAdded(RealmResults<MessageRecord> records, OrderedCollectionChangeSet orderedCollectionChangeSet) {
         messagesView.scrollToPosition(messageRecords.size() - 1);
         updateDisconnectTimer();
+    }
+
+    private boolean deleteAllMessagesDialog(View v) {
+        new AlertDialog
+                .Builder(this)
+                .setCancelable(true)
+                .setTitle(R.string.delete_messages_title)
+                .setMessage(R.string.delete_messages_text)
+                .setPositiveButton(R.string.OK, ((dialog, which) -> {
+                    if (deviceRecord != null) {
+                        String deviceAddress = deviceRecord.getAddress();
+                        database.executeAsync(realm -> {
+                            Database database = new Database(realm);
+                            DeviceRecord deviceRecord = database.getDevice(deviceAddress);
+                            RealmResults<MessageRecord> messageRecords = deviceRecord.getMessages().sort(MessageRecord.FIELD_TIME_MILLIS);
+                            messageRecords.forEach(messageRecord -> {
+                                if (messageRecord.getMessageType() != MessageType.PENDING_MESSAGE) {
+                                    messageRecord.deleteFromRealm();
+                                }
+                            });
+                        });
+                    }
+                })).create().show();
+        return true;
     }
 
     private void updateDisconnectTimer() {
