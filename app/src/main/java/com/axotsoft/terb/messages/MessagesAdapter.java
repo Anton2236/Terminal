@@ -99,6 +99,11 @@ public class MessagesAdapter extends RealmRecyclerViewAdapter<MessageRecord, Mes
                     messageText.setBackgroundResource(R.drawable.message_received);
                     break;
                 case ERROR:
+                    params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                    params.endToEnd = ConstraintLayout.LayoutParams.UNSET;
+
+                    dateParams.startToStart = R.id.message_text;
+                    dateParams.endToEnd = ConstraintLayout.LayoutParams.UNSET;
                     messageText.setBackgroundResource(R.drawable.message_error);
                     break;
             }
