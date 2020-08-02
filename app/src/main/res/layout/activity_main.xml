@@ -91,7 +91,6 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/simple_button_selector"
                 android:gravity="center"
-                android:onClick="switchLineEnding"
                 android:text="@string/empty_line_ending"
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"

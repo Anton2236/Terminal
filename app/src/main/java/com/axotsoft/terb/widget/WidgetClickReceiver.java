@@ -1,18 +1,29 @@
 package com.axotsoft.terb.widget;
 
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.axotsoft.terb.bluetooth.BluetoothConnectionHelperService;
+import com.axotsoft.terb.devices.DeviceRecord;
+import com.axotsoft.terb.realm.Database;
 
 public class WidgetClickReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        context.startForegroundService(CommandWidgetService.makeIntent(context, intent.getIntExtra("id", -1)));
+        Database database = new Database();
+        int widgetId = intent.getIntExtra("id", AppWidgetManager.INVALID_APPWIDGET_ID);
+        if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+            WidgetRecord widgetData = database.getWidget(widgetId);
+            DeviceRecord deviceRecord = widgetData.getDeviceRecord();
+            context.startForegroundService(BluetoothConnectionHelperService.makeMessageCommandIntent(context, deviceRecord.getAddress(), widgetData.getPattern()));
+        }
     }
 
     public static PendingIntent makeIntent(Context context, int widgetId) {
-        return PendingIntent.getBroadcast(context, 0, new Intent(context, WidgetClickReceiver.class).putExtra("id", widgetId), PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, widgetId, new Intent(context, WidgetClickReceiver.class).putExtra("id", widgetId), PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

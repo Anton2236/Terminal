@@ -1,4 +1,4 @@
-package com.axotsoft.terb.bluetooth;
+package com.axotsoft.terb.utils;
 
 import androidx.annotation.StringRes;
 

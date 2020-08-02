@@ -3,8 +3,9 @@ package com.axotsoft.terb.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -12,41 +13,45 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
+import com.axotsoft.terb.devices.DeviceRecord;
+import com.axotsoft.terb.patterns.records.PatternRecord;
+import com.axotsoft.terb.patterns.PatternsManager;
 import com.axotsoft.terb.utils.AbstractDeviceClientActivity;
-import com.axotsoft.terb.bluetooth.LINE_ENDING_TYPE;
-import com.axotsoft.terb.provider.BluetoothDeviceRecord;
+import com.axotsoft.terb.utils.LineEndingEditor;
 import com.axotsoft.terb.utils.UiUtils;
 
-import static com.axotsoft.terb.widget.BluetoothCommandWidgetUtils.saveWidgetPreferences;
-
 /**
- * The configuration screen for the {@link BluetoothCommandWidget BluetoothCommandWidget} AppWidget.
+ * The configuration screen for the {@link CommandWidgetProvider BluetoothCommandWidget} AppWidget.
  */
-public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceClientActivity {
+public class CommandWidgetConfigureActivity extends AbstractDeviceClientActivity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private EditText appWidgetTitleText;
     private EditText appWidgetCommandText;
-    private Button addButton;
     private TextView deviceText;
     private ConstraintLayout configurationContainer;
-    private TextView lineEndingText;
-    private RecyclerView commandsContainer;
-    private LINE_ENDING_TYPE currentLineEnding;
+    private PatternsManager patternsManager;
+    private LineEndingEditor lineEndingEditor;
+    private PatternRecord selectedPattern;
 
     public void onAddButtonClick(View v) {
         if (deviceRecord != null) {
-            // When the button is clicked, store the string locally
-            String commandText = appWidgetCommandText.getText().toString();
-            if (commandText.isEmpty()) {
-                UiUtils.makeToast(this, getResources().getString(R.string.toast_enter_command));
-                return;
+
+            if (selectedPattern == null) {
+                // When the button is clicked, store the string locally
+                String commandText = appWidgetCommandText.getText().toString();
+                if (commandText.isEmpty()) {
+                    UiUtils.makeToast(this, getResources().getString(R.string.toast_enter_command));
+                    return;
+                }
+                selectedPattern = patternsManager.createSingletonPattern(commandText);
             }
             String widgetTitleText = appWidgetTitleText.getText().toString();
-            saveWidgetPreferences(this, new BluetoothWidgetData(commandText, deviceRecord.getMacAddress(), widgetTitleText, appWidgetId, currentLineEnding));
+
+            database.execute(realm -> realm.insert(new WidgetRecord(appWidgetId, deviceRecord, selectedPattern, widgetTitleText)));
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-            BluetoothCommandWidget.updateAppWidget(this, appWidgetManager, appWidgetId);
+            CommandWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetId);
 
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
@@ -60,7 +65,7 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceClien
     }
 
     @Override
-    protected void updateDeviceData(BluetoothDeviceRecord deviceRecord) {
+    protected void updateDeviceData(DeviceRecord deviceRecord) {
         if (deviceRecord == null) {
             deviceText.setText(R.string.select_device);
             configurationContainer.setVisibility(View.GONE);
@@ -70,27 +75,15 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceClien
             configurationContainer.setVisibility(View.VISIBLE);
             appWidgetCommandText.setText("");
             appWidgetTitleText.setText("");
-            if (deviceRecord.getCommands() != null && deviceRecord.getCommands().size() > 0) {
-                commandsContainer.setVisibility(View.VISIBLE);
-                commandsContainer.setAdapter(new CommandsAdapter(deviceRecord.getCommands(), appWidgetCommandText::setText, null, R.layout.command_layout));
-            }
-            else {
-                commandsContainer.setVisibility(View.GONE);
-            }
-            setLineEnding(deviceRecord.getLineEnding());
+            patternsManager.updateDeviceRecord(deviceRecord, this::selectPattern);
+            lineEndingEditor.updateDeviceRecord(deviceRecord);
+            selectedPattern = null;
         }
     }
 
-    private void setLineEnding(LINE_ENDING_TYPE lineEnding) {
-        currentLineEnding = lineEnding;
-        if (currentLineEnding == null) {
-            currentLineEnding = LINE_ENDING_TYPE.NONE;
-        }
-        lineEndingText.setText(currentLineEnding.getText());
-    }
-
-    public void switchLineEnding(View v) {
-        setLineEnding(currentLineEnding.getNext());
+    private void selectPattern(PatternRecord patternRecord) {
+        appWidgetCommandText.setText(patternRecord.getName());
+        selectedPattern = patternRecord;
     }
 
     @Override
@@ -122,11 +115,27 @@ public class BluetoothCommandWidgetConfigureActivity extends AbstractDeviceClien
         deviceText = findViewById(R.id.configure_device_text);
         appWidgetTitleText = findViewById(R.id.appwidget_text);
         appWidgetCommandText = findViewById(R.id.command_text);
-        lineEndingText = findViewById(R.id.line_ending_chooser);
-        commandsContainer = findViewById(R.id.commands_container);
-        addButton = findViewById(R.id.add_button);
+        TextView lineEndingText = findViewById(R.id.line_ending_chooser);
+        lineEndingEditor = new LineEndingEditor(lineEndingText, database);
+        RecyclerView commandsContainer = findViewById(R.id.commands_container);
+        patternsManager = new PatternsManager(database, commandsContainer, appWidgetCommandText, R.layout.command_layout);
         configurationContainer = findViewById(R.id.widget_configurator);
-        addButton.setOnClickListener(this::onAddButtonClick);
+        appWidgetCommandText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                selectedPattern = null;
+            }
+        });
     }
 
     public void onChooseDeviceButtonClick(View v) {

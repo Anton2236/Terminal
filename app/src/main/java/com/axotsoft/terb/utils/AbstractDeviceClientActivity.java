@@ -7,15 +7,14 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.axotsoft.terb.R;
-import com.axotsoft.terb.chooser.DeviceChooserActivity;
-import com.axotsoft.terb.provider.BluetoothDeviceRecord;
-import com.axotsoft.terb.provider.BluetoothDevicesDao;
-import com.axotsoft.terb.utils.UiUtils;
+import com.axotsoft.terb.activity.DeviceChooserActivity;
+import com.axotsoft.terb.devices.DeviceRecord;
+import com.axotsoft.terb.realm.Database;
 
 public abstract class AbstractDeviceClientActivity extends AppCompatActivity {
 
-    protected BluetoothDeviceRecord deviceRecord;
-    protected BluetoothDevicesDao devicesDao;
+    protected DeviceRecord deviceRecord;
+    protected Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,16 +24,12 @@ public abstract class AbstractDeviceClientActivity extends AppCompatActivity {
             finish();
             return;
         }
-        devicesDao = new BluetoothDevicesDao(this);
-
+        database = new Database();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (deviceRecord != null) {
-            deviceRecord = devicesDao.getDeviceById(deviceRecord.getId());
-        }
         updateDeviceData(deviceRecord);
     }
 
@@ -43,14 +38,15 @@ public abstract class AbstractDeviceClientActivity extends AppCompatActivity {
         startActivityForResult(intent, DeviceChooserActivity.REQUEST_DEVICE);
     }
 
-    protected abstract void updateDeviceData(BluetoothDeviceRecord deviceRecord);
+    protected abstract void updateDeviceData(DeviceRecord deviceRecord);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DeviceChooserActivity.REQUEST_DEVICE) {
             if (resultCode == RESULT_OK) {
-                deviceRecord = devicesDao.getDeviceByUri(data.getData());
+                String address = data.getStringExtra(DeviceChooserActivity.EXTRA_DEVICE_ADDRESS);
+                deviceRecord = database.getDevice(address);
             }
             else {
                 deviceRecord = null;

@@ -1,18 +1,15 @@
-package com.axotsoft.terb.chooser;
+package com.axotsoft.terb.devices;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.axotsoft.terb.bluetooth.LINE_ENDING_TYPE;
-import com.axotsoft.terb.provider.BluetoothDeviceContract;
-import com.axotsoft.terb.provider.BluetoothDeviceRecord;
-import com.axotsoft.terb.provider.BluetoothDevicesDao;
+import com.axotsoft.terb.realm.Database;
 import com.axotsoft.terb.utils.ContextAdapter;
+import com.axotsoft.terb.utils.LINE_ENDING_TYPE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,17 +21,17 @@ import java.util.function.Consumer;
 
 public class BluetoothDevicesManager {
     private final BluetoothAdapter adapter;
-    private final BluetoothDevicesDao devicesDao;
+    private final Database database;
     private final ContextAdapter contextAdapter;
     private final DevicesAdapter devicesAdapter;
     private final RecyclerView devicesView;
     private final List<DeviceData> devices;
     private final Map<String, DeviceData> devicesMap;
-    private final Consumer<Uri> selectionConsumer;
+    private final Consumer<String> selectionConsumer;
 
 
-    public BluetoothDevicesManager(ContextAdapter contextAdapter, RecyclerView devicesView, Consumer<Uri> selectionConsumer) {
-        this.devicesDao = new BluetoothDevicesDao(contextAdapter.getContext());
+    public BluetoothDevicesManager(ContextAdapter contextAdapter, RecyclerView devicesView, Consumer<String> selectionConsumer) {
+        this.database = new Database();
         this.contextAdapter = contextAdapter;
         this.devicesView = devicesView;
         this.adapter = BluetoothAdapter.getDefaultAdapter();
@@ -56,10 +53,9 @@ public class BluetoothDevicesManager {
 
     public void onDeviceClick(DeviceData data) {
         if (data.isSaved() || saveDevice(data.getDevice())) {
-            BluetoothDeviceRecord record = devicesDao.getDeviceByMacAddress(data.getAddress());
+            DeviceRecord record = database.getDevice(data.getAddress());
             if (record != null) {
-                Uri uri = BluetoothDeviceContract.DeviceEntry.buildUri(record.getId());
-                selectionConsumer.accept(uri);
+                selectionConsumer.accept(record.getAddress());
             }
         }
     }
@@ -77,13 +73,13 @@ public class BluetoothDevicesManager {
     public boolean saveDevice(BluetoothDevice device) {
         if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
             String deviceAddress = device.getAddress();
-            Uri uri = devicesDao.insertDevice(deviceAddress);
 
-            BluetoothDeviceRecord record = devicesDao.getDeviceByUri(uri);
-            record.setLineEnding(LINE_ENDING_TYPE.CRLF);
-            record.setCommands(new ArrayList<>());
-            record.setDeviceName(device.getName());
-            devicesDao.updateDevice(record);
+            database.execute(realm -> {
+                DeviceRecord record = new DeviceRecord(deviceAddress);
+                record.setDeviceName(device.getName());
+                record.setLineEnding(LINE_ENDING_TYPE.CRLF);
+                realm.insert(record);
+            });
 
             DeviceData deviceData = devicesMap.get(deviceAddress);
             if (deviceData != null) {
@@ -139,10 +135,11 @@ public class BluetoothDevicesManager {
         }
         else {
             if (storedData.isSaved() && !Objects.equals(device.getName(), storedData.getName())) {
-                BluetoothDeviceRecord deviceRecord = devicesDao.getDeviceByMacAddress(storedData.getAddress());
+                DeviceRecord deviceRecord = database.getDevice(storedData.getAddress());
                 if (deviceRecord != null) {
-                    deviceRecord.setDeviceName(device.getName());
-                    devicesDao.updateDevice(deviceRecord);
+                    database.execute(realm -> {
+                        deviceRecord.setDeviceName(device.getName());
+                    });
                 }
             }
             storedData.setName(device.getName());
@@ -155,18 +152,14 @@ public class BluetoothDevicesManager {
         }
     }
 
-    public DevicesAdapter getDevicesAdapter() {
-        return devicesAdapter;
-    }
-
     public void updateDevices() {
         devices.clear();
         devicesMap.clear();
-        List<BluetoothDeviceRecord> records = devicesDao.getAllDevices();
+        List<DeviceRecord> records = database.getAllDevices();
         boolean bluetoothEnabled = adapter.getState() == BluetoothAdapter.STATE_ON;
 
-        for (BluetoothDeviceRecord record : records) {
-            DeviceData data = new DeviceData(record.getMacAddress(), record.getDeviceName(), true, !bluetoothEnabled);
+        for (DeviceRecord record : records) {
+            DeviceData data = new DeviceData(record.getAddress(), record.getDeviceName(), true, !bluetoothEnabled);
             if (devicesMap.get(data.getAddress()) == null) {
                 devicesMap.put(data.getAddress(), data);
                 devices.add(data);

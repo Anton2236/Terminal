@@ -12,13 +12,17 @@
     <string name="crlf">CR/LF</string>
     <string name="empty_line_ending">NONE</string>
     <string name="enter_command">Enter Command</string>
-    <string name="send">SEND</string>
-    <string name="save">SAVE</string>
-    <string name="disconnect">DISCONNECT</string>
-    <string name="connect">CONNECT</string>
+    <string name="send">Send</string>
+    <string name="save">Save</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">Connect</string>
     <string name="find_devices">Find Devices</string>
     <string name="searching">Searching…</string>
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="pair">Pair</string>
     <string name="device_not_connected">Device not connected</string>
+    <string name="bluetooh_connection">Bluetooth Connection</string>
+    <string name="connecting">Connecting…</string>
+    <string name="disconnecting">Disconnecting…</string>
+    <string name="disconnect_first_toast">Disconnect before connecting to another device!</string>
 </resources>

@@ -1,11 +1,10 @@
-package com.axotsoft.terb.chooser;
+package com.axotsoft.terb.activity;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -15,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axotsoft.terb.R;
+import com.axotsoft.terb.devices.BluetoothDevicesManager;
+import com.axotsoft.terb.devices.FindDevicesButton;
 import com.axotsoft.terb.utils.ContextAdapter;
 
 public class DeviceChooserActivity extends AppCompatActivity {
     public static final int REQUEST_DEVICE = 1;
+    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
     private static final int REQUEST_LOCATION_TO_START_DISCOVERY = 1;
 
@@ -54,9 +56,9 @@ public class DeviceChooserActivity extends AppCompatActivity {
         contextAdapter.onPause();
     }
 
-    private void selectDevice(Uri uri) {
+    private void selectDevice(String address) {
         Intent intent = new Intent();
-        intent.setData(uri);
+        intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
         setResult(RESULT_OK, intent);
         finish();
     }

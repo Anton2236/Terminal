@@ -9,13 +9,27 @@
         android:id="@+id/message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="800dp"
+        android:maxWidth="250dp"
         android:padding="5dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:textColor="@color/colorWhite"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/message_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:background="@drawable/message_pending"
+        android:padding="5dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/message_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

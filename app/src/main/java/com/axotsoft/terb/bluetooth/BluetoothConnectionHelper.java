@@ -17,11 +17,16 @@ import android.util.Log;
 
 public class BluetoothConnectionHelper {
     private Context context;
-    private BluetoothAdapter adapter;
+    private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private Messenger bluetoothMessenger;
 
     private ServiceConnection serviceConnection = null;
     private BroadcastReceiver stateChangedReceiver = null;
+    private int latestStartId = 0;
+
+    public BluetoothConnectionHelper(Context context) {
+        this.context = context;
+    }
 
     private ServiceConnection getServiceConnection() {
         return new ServiceConnection() {
@@ -38,18 +43,11 @@ public class BluetoothConnectionHelper {
         };
     }
 
-
-    public BluetoothConnectionHelper(Context context) {
-        this.context = context;
-        this.adapter = BluetoothAdapter.getDefaultAdapter();
-    }
-
     public void connect(String deviceAddress, Handler callbackHandler) {
         runOnEnabledAdapter(() ->
         {
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (bluetoothAdapter.isDiscovering()) {
-                bluetoothAdapter.cancelDiscovery();
+            if (adapter.isDiscovering()) {
+                adapter.cancelDiscovery();
             }
             Intent intent = BluetoothConnectionService.makeIntent(context, deviceAddress, callbackHandler);
             serviceConnection = getServiceConnection();
@@ -57,27 +55,17 @@ public class BluetoothConnectionHelper {
         });
     }
 
-    public boolean sendMessage(String message, LINE_ENDING_TYPE endingType) {
-        boolean ret = false;
-        if (bluetoothMessenger != null) {
-            send(BluetoothConnectionHandler.getSendMessage(message, endingType));
-            ret = true;
-        }
-        return ret;
-    }
-
-    private void send(Message msg) {
+    public boolean send(Message msg) {
+        boolean success = false;
         try {
-            bluetoothMessenger.send(msg);
+            if (bluetoothMessenger != null) {
+                bluetoothMessenger.send(msg);
+                success = true;
+            }
         } catch (RemoteException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
         }
-    }
-
-    public void disconnect() {
-        if (bluetoothMessenger != null) {
-            send(BluetoothConnectionHandler.getDisconnectMessage());
-        }
+        return success;
     }
 
     public void unbind() {
@@ -86,7 +74,6 @@ public class BluetoothConnectionHelper {
             serviceConnection = null;
         }
     }
-
 
     private void runOnEnabledAdapter(Runnable runnable) {
         if (adapter.isEnabled()) {
@@ -106,6 +93,7 @@ public class BluetoothConnectionHelper {
             stateChangedReceiver = null;
         }
     }
+
 
     private class StateChangedReceiver extends BroadcastReceiver {
         private Runnable runnable;

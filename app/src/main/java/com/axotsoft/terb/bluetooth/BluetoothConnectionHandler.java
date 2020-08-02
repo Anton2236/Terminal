@@ -14,6 +14,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.axotsoft.terb.utils.LINE_ENDING_TYPE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,7 +67,7 @@ public class BluetoothConnectionHandler extends Handler {
             public void onReceive(Context context, Intent intent) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.BOND_NONE);
-                if (device.getAddress().equals(address)) {
+                if (device != null && device.getAddress().equals(address)) {
                     if (bondState == BluetoothDevice.BOND_BONDED) {
                         context.unregisterReceiver(this);
                         connect(device);

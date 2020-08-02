@@ -1,4 +1,4 @@
-package com.axotsoft.terb.chooser;
+package com.axotsoft.terb.devices;
 
 import android.bluetooth.BluetoothDevice;
 

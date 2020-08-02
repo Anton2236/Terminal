@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.axotsoft.terb">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name=".TerbApplication"
         android:allowBackup="true"
@@ -11,13 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".widget.BluetoothCommandWidgetConfigureActivity">
+        <activity android:name=".widget.CommandWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".chooser.DeviceChooserActivity" />
+        <activity android:name=".activity.DeviceChooserActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,12 +44,7 @@
                     android:pathPrefix="/command"
                     android:scheme="https" />
             </intent-filter>
-        </activity>
-
-<!--        <meta-data-->
-<!--            android:name="com.google.android.actions"-->
-<!--            android:resource="@xml/actions" />-->
-
+        </activity> <!-- <meta-data -->
         <provider
             android:name=".slice.CommandSliceProvider"
             android:authorities="com.axotsoft.terb.slice"
@@ -54,16 +55,13 @@
                 <category android:name="android.app.slice.category.SLICE" />
             </intent-filter>
         </provider>
-        <provider
-            android:name=".provider.BluetoothDevicesProvider"
-            android:authorities="com.axotsoft.terb.authority"
-            android:enabled="true"
-            android:exported="false" />
+        <!-- android:name="com.google.android.actions" -->
+        <!-- android:resource="@xml/actions" /> -->
 
         <receiver
             android:name=".widget.WidgetClickReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
         <receiver
             android:name=".devices.DeviceNameChangedReceiver"
             android:enabled="true"
@@ -72,7 +70,7 @@
                 <action android:name="android.bluetooth.device.action.NAME_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".widget.BluetoothCommandWidget">
+        <receiver android:name=".widget.CommandWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -83,19 +81,14 @@
         </receiver>
 
         <service
-            android:name=".widget.CommandWidgetService"
-            android:exported="false" />
-        <service
             android:name=".bluetooth.BluetoothConnectionService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".bluetooth.BluetoothConnectionHelperService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
     </application>
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
 </manifest>
