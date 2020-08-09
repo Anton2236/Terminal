@@ -6,7 +6,7 @@
         </parameter>
         <fulfillment
             fulfillmentMode="actions.fulfillment.SLICE"
-            urlTemplate="content://com.axotsoft.terb.slice/command{?appFeature}">
+            urlTemplate="content://com.axotsoft.wicket.slice/command{?appFeature}">
             <parameter-mapping
                 intentParameter="feature"
                 required="true"

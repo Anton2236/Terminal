@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.axotsoft.terb.widget.CommandWidgetConfigureActivity"
+    android:configure="com.axotsoft.wicket.widget.CommandWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/bluetooth_command_widget"
     android:initialLayout="@layout/bluetooth_command_widget"
     android:minWidth="30dp"
