@@ -16,39 +16,39 @@ import java.util.List;
 import io.realm.Realm;
 
 public class WicketApplication extends Application {
-    private static final String SLICE_AUTHORITY = "com.axotsoft.wicket.slice";
+//    private static final String SLICE_AUTHORITY = "com.axotsoft.wicket.slice";
 
     @Override
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
-        grantSlicePermissions();
+//        grantSlicePermissions();
 
     }
 
-    private void grantSlicePermissions() {
-        Context context = getApplicationContext();
-        Uri sliceProviderUri =
-                new Uri.Builder()
-                        .scheme(ContentResolver.SCHEME_CONTENT)
-                        .authority(SLICE_AUTHORITY)
-                        .build();
+//    private void grantSlicePermissions() {
+//        Context context = getApplicationContext();
+//        Uri sliceProviderUri =
+//                new Uri.Builder()
+//                        .scheme(ContentResolver.SCHEME_CONTENT)
+//                        .authority(SLICE_AUTHORITY)
+//                        .build();
+//
+//        String assistantPackage = getAssistantPackage(context);
+//        if (assistantPackage == null) {
+//            return;
+//        }
+//        SliceManager.getInstance(context)
+//                .grantSlicePermission(assistantPackage, sliceProviderUri);
+//    }
 
-        String assistantPackage = getAssistantPackage(context);
-        if (assistantPackage == null) {
-            return;
-        }
-        SliceManager.getInstance(context)
-                .grantSlicePermission(assistantPackage, sliceProviderUri);
-    }
-
-    private String getAssistantPackage(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> resolveInfoList = packageManager.queryIntentServices(
-                new Intent(VoiceInteractionService.SERVICE_INTERFACE), 0);
-        if (resolveInfoList.isEmpty()) {
-            return null;
-        }
-        return resolveInfoList.get(0).serviceInfo.packageName;
-    }
+//    private String getAssistantPackage(Context context) {
+//        PackageManager packageManager = context.getPackageManager();
+//        List<ResolveInfo> resolveInfoList = packageManager.queryIntentServices(
+//                new Intent(VoiceInteractionService.SERVICE_INTERFACE), 0);
+//        if (resolveInfoList.isEmpty()) {
+//            return null;
+//        }
+//        return resolveInfoList.get(0).serviceInfo.packageName;
+//    }
 }
